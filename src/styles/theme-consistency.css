@@ -1,0 +1,103 @@
+/* Semantic theme compatibility layer for legacy previews and page chrome. */
+html,body,.app-shell{background:var(--page);color:var(--text)}
+body,.app-shell,.site-header,.site-footer,.surface,.component-card,.card-body,.mobile-menu,.search-modal>div,.studio-code>header{transition:background-color .2s ease,color .2s ease,border-color .2s ease}
+.site-footer{background:var(--surface)}
+.menu-scrim,.search-modal{background:var(--overlay)}
+.favorite{border-color:var(--border-strong);background:color-mix(in srgb,var(--surface) 92%,transparent);color:var(--text);box-shadow:var(--shadow-soft)}
+.favorite.liked{color:var(--accent)}
+.input,select,textarea{border-color:var(--border);background:var(--input-background);color:var(--text)}
+option{background:var(--surface);color:var(--text)}
+.code,.studio-code .studio-code-content{background:var(--code-background);color:var(--code-foreground);border-color:var(--border)}
+.canvas-scroll{background-color:var(--canvas-background);background-image:linear-gradient(var(--canvas-grid) 1px,transparent 1px),linear-gradient(90deg,var(--canvas-grid) 1px,transparent 1px)}
+.demo{color:var(--text);background-color:var(--canvas-background);background-image:linear-gradient(var(--canvas-grid) 1px,transparent 1px),linear-gradient(90deg,var(--canvas-grid) 1px,transparent 1px)}
+.creative-grid .component-card{border-color:var(--border);background:var(--surface);box-shadow:inset 0 1px color-mix(in srgb,var(--text) 4%,transparent)}
+.creative-grid .component-card:hover{border-color:color-mix(in srgb,var(--accent) 62%,var(--border));box-shadow:var(--shadow)}
+.creative-grid .card-preview .demo{background-color:var(--canvas-background);background-image:linear-gradient(var(--canvas-grid) 1px,transparent 1px),linear-gradient(90deg,var(--canvas-grid) 1px,transparent 1px),radial-gradient(circle at 70% 15%,color-mix(in srgb,var(--accent) 8%,transparent),transparent 45%)}
+.component-card .card-body,.home-card-copy{background:var(--surface);color:var(--text)}
+.search-trigger,.library-search,.studio-mobile-tabs button{background:var(--surface)}
+.search-results>button:hover,.library-group-toggle:hover,.library-group a:hover,.library-list a:hover{background:var(--interactive-hover)}
+
+.demo-field,.toggle-row,.segments,.profile-card,.metric,.expand,.pagination button,.toast,.dialog-demo,.reveal-tile{background:var(--surface);border-color:var(--border);color:var(--text)}
+.demo-field input,.expand button,.dialog-demo button{color:var(--text)}
+.demo-field button,.demo-field kbd,.toggle-row small,.segments button,.profile-card p,.metric small,.metric span,.expand p,.rail-tabs button,.toast small,.toast button,.empty-state p,.dialog-demo p,.reveal-tile small{color:var(--muted)}
+.demo-field kbd,.dialog-demo button,.rail-tabs,.progress i{border-color:var(--border)}
+.dialog-mark{background:var(--surface-muted)}
+
+.light .demo :is(.x-search,.x-tabs,.x-radial button,.x-fab button,.x-notification,.x-spotlight,.x-float input,
+.s-token,.s-multi,.s-range,.s-inline,.s-password,.s-otp,.s-compare button,.s-pricing button,.s-milestone i,.s-toasts article,.s-snackbar,.s-drawer-wrap>button,.s-drawer-wrap aside,.s-complete,.s-spark,.s-gauge,.s-scatter,.s-donut,.s-time-data,.s-legend,.s-kpi,.s-audio,.s-themes article,.s-themes nav button,.s-type button,.s-drop,.s-avatar button,
+.b1-drag,.b1-auto input,.b1-limit textarea,.b1-task,.b1-event,.b1-pills,.b1-context>button,.b1-context nav,.b1-number,.b1-sheet-stage,.b1-sheet-stage section,.b1-edit,.b1-trail,.b1-bars button,.b1-matrix button,.b1-video,.b1-album,.b1-split,.b1-dashboard){background-color:var(--surface);border-color:var(--border);color:var(--text);box-shadow:var(--shadow-soft)}
+.light .demo :is(input,textarea,button){color:inherit}
+.light .demo :is(small,p,.x-tabs button,.b1-task p,.b1-event span,.b1-matrix button,.b1-video button,.b1-album button,.b1-dashboard nav button){color:var(--muted)}
+.light .demo :is(.s-token input,.s-otp input,.s-password input,.s-multi input,.s-inline span,.s-inline input){color:var(--text)}
+.light .demo .s-otp input,.light .demo .s-multi>button,.light .demo .s-inline button{background:var(--surface-muted);border-color:var(--border)}
+.light .demo .s-donut .ring:before{background:var(--surface)}
+.light .demo .s-product{background:linear-gradient(145deg,#fff,#eaf0f3);color:var(--text);border-color:var(--border);box-shadow:var(--shadow)}
+.light .demo .s-flip>span{background:var(--surface);color:var(--text);border-color:var(--border)}
+.light .demo .s-carousel>div{background:linear-gradient(135deg,#e1edef,#f8fbfc)}
+.light .demo .b1-skeleton i{background:linear-gradient(100deg,#e4ecef 30%,#f9fbfc 48%,#e4ecef 66%);background-size:250% 100%}
+.light .demo .b1-reconnect{background:#fff9ed;border-color:#d5b579;color:#24333a}.light .demo .b1-reconnect.ok{background:#edf9f5;border-color:#87bbae}
+.light .demo .b1-recovery{background:#fff1f2;border-color:#d6a1a7;color:#342329}
+
+.light .reference-home{background:var(--page);color:var(--text)}
+.light .reference-hero-copy>p,.light .hero-trust,.light .reference-workflow header>p,.light .workflow-steps p{color:var(--muted)}
+.light .home-feature-card{background:var(--surface);border-color:var(--border);box-shadow:var(--shadow-soft)}
+.light .home-card-preview{border-color:var(--border)}
+.light .home-card-preview .demo{background-color:var(--canvas-background);background-image:linear-gradient(var(--canvas-grid) 1px,transparent 1px),linear-gradient(90deg,var(--canvas-grid) 1px,transparent 1px)}
+.light .home-card-preview>button{background:color-mix(in srgb,var(--surface) 94%,transparent);color:var(--text);border-color:var(--border-strong)}
+.light .home-card-copy p{color:var(--muted)}
+.light .home-feature-card footer{border-color:var(--border)}
+.light .reference-workflow{border-color:var(--border);background:radial-gradient(ellipse at 8% 100%,rgb(0 140 149 / .08),transparent 42%)}
+.light .workflow-steps article{border-color:var(--border)}
+.light .demo-tour{background:var(--overlay)}.light .demo-tour>div{background:var(--surface);border-color:var(--border);box-shadow:var(--shadow)}
+.light .demo-tour span{border-color:var(--border)}.light .demo-tour span small{color:var(--muted)}.light .demo-close{color:var(--text);border-color:var(--border)}
+
+.light .code :is(.token.comment,.token.prolog,.token.doctype,.token.cdata){color:#657985}
+.light .code .token.punctuation{color:#40545f}
+.light .code :is(.token.property,.token.tag,.token.boolean,.token.number,.token.constant,.token.symbol){color:#8b3c65}
+.light .code :is(.token.selector,.token.attr-name,.token.string,.token.char,.token.builtin){color:#236b42}
+.light .code :is(.token.operator,.token.entity,.token.url,.token.variable){color:#875f12}
+.light .code :is(.token.atrule,.token.attr-value,.token.keyword){color:#065f87}
+.light .code :is(.token.function,.token.class-name){color:#6d4aa2}
+
+*{scrollbar-color:var(--border-strong) var(--surface-muted)}
+@media(prefers-reduced-motion:reduce){body,.app-shell,.site-header,.site-footer,.surface,.component-card,.card-body,.mobile-menu,.search-modal>div,.studio-code>header{transition:none}}
+
+/* Component-level semantic theme bridge. Legacy previews inherit the site theme;
+   explicitly art-directed media/crop/editorial demos keep their own palette. */
+.demo{--preview-bg:var(--component-background);--preview-surface:var(--component-surface);--preview-raised:var(--component-surface-raised);--preview-text:var(--component-text);--preview-muted:var(--component-muted);--preview-border:var(--component-border);color:var(--preview-text)}
+.demo :where(button,input,textarea,select){accent-color:var(--demo-accent);caret-color:var(--demo-accent)}
+.demo :where(button,input,textarea,select):disabled{opacity:.52}
+
+.light .demo :where(.x-search,.x-tabs,.x-profile,.x-radial button,.x-fab button,.x-notification,.x-spotlight,.x-float input,.x-command,.x-accordion,.x-swipe button,.x-badge,.x-skeleton,.x-check i,.x-tooltip-wrap>button){background-color:var(--preview-surface);border-color:var(--preview-border);color:var(--preview-text);box-shadow:var(--shadow-soft)}
+.light .demo :where(.x-search input,.x-command input,.x-accordion button,.x-spotlight button){color:var(--preview-text)}
+.light .demo :where(.x-search button,.x-tabs button,.x-profile small,.x-wave span,.x-notification small,.x-float span,.x-steps button,.x-command>button,.x-accordion p,.x-counter small,.x-counter span){color:var(--preview-muted)}
+.light .demo .x-command label,.light .demo .x-accordion section+section{border-color:var(--preview-border)}
+.light .demo .x-command>button.active{background:var(--interactive-active);color:var(--preview-text)}
+.light .demo .x-swipe button{background:linear-gradient(145deg,var(--preview-surface),var(--preview-raised))}
+.light .demo .x-skeleton>i,.light .demo .x-skeleton b{background:linear-gradient(90deg,#e1e9ed,#f8fafb,#e1e9ed);background-size:200% 100%}
+.light .demo :where(.x-tabs button.active,.x-radial .main,.x-fab .main,.x-notification i,.x-steps .done i,.x-badge b,.x-check input:checked+i){color:var(--component-accent-foreground)}
+
+.light .demo :where(.s-hold,.s-particle,.s-trace,.s-kinetic,.s-slide-fill,.s-ripple,.s-morph-icon,.s-path-success,.s-download,.s-token,.s-multi,.s-range,.s-inline,.s-password,.s-otp,.s-dock,.s-bottom,.s-sidebar,.s-mega-wrap>button,.s-mega,.s-tree,.s-compare button,.s-pricing button,.s-milestone i,.s-toasts article,.s-snackbar,.s-drawer-wrap>button,.s-drawer-wrap aside,.s-complete,.s-path button,.s-scramble,.s-spark,.s-gauge,.s-scatter,.s-donut,.s-time-data,.s-legend,.s-kpi,.s-carousel>div,.s-carousel nav button,.s-audio,.s-themes article,.s-themes nav button,.s-type button,.s-drop,.s-avatar button,.s-bento button,.s-kanban section,.s-kanban article,.s-timeline-gallery>div button,.s-timeline-gallery nav button,.s-confetti button){background-color:var(--preview-surface);border-color:var(--preview-border);color:var(--preview-text);box-shadow:var(--shadow-soft)}
+.light .demo .s-trace:after{background:var(--preview-surface)}
+.light .demo :where(.s-token input,.s-otp input,.s-password input,.s-multi input,.s-inline span,.s-inline input,.s-mega-wrap>button,.s-mega,.s-mega a,.s-tree button,.s-crumb strong,.s-compare button.active,.s-pricing button.active,.s-milestone button.active,.s-drawer-wrap aside>button,.s-circle button,.s-gauge button,.s-legend button,.s-themes nav button.active,.s-timeline-gallery button){color:var(--preview-text)}
+.light .demo :where(.s-token button,.s-multi>button,.s-inline button,.s-dock button.active,.s-bottom button.active,.s-sidebar button.active,.s-mega a:hover,.s-otp input){background:var(--preview-raised);border-color:var(--preview-border)}
+.light .demo :where(.s-password button,.s-range footer,.s-rating small,.s-dock button,.s-bottom button,.s-sidebar button,.s-crumb,.s-mega small,.s-tree small,.s-compare button,.s-pricing button,.s-milestone button,.s-milestone small,.s-toasts small,.s-toasts button,.s-drawer-wrap header button,.s-drawer-wrap aside small,.s-complete p,.s-shimmer small,.s-spark small,.s-gauge small,.s-bars button,.s-scatter span,.s-heat span,.s-donut li button,.s-kpi small,.s-time-data span,.s-carousel small,.s-audio span,.s-themes nav button,.s-type input,.s-drop small,.s-avatar button,.s-bento button,.s-kanban header,.s-kanban article small,.s-article nav button,.s-article>small,.s-article p,.s-pricing em){color:var(--preview-muted)}
+.light .demo :where(.s-password>div,.s-multi label,.s-dock,.s-bottom,.s-sidebar,.s-mega,.s-tree,.s-compare button,.s-pricing button,.s-toasts article,.s-snackbar,.s-drawer-wrap>button,.s-drawer-wrap aside,.s-complete,.s-liquid>i,.s-path button,.s-scramble,.s-spark,.s-gauge,.s-scatter,.s-donut,.s-time-data,.s-legend,.s-kpi,.s-carousel>div,.s-carousel nav button,.s-audio,.s-themes article,.s-themes nav button,.s-type input,.s-type button,.s-drop,.s-avatar button,.s-bento button,.s-kanban section,.s-kanban article,.s-article nav,.s-timeline-gallery>div button,.s-timeline-gallery nav button){border-color:var(--preview-border)}
+.light .demo .s-validation{background:#fff1f2;border-color:#d6a1a7;color:#54272d}.light .demo .s-validation button{border-color:#e5c4c8;color:#7b343d}
+.light .demo .s-donut .ring:before{background:var(--preview-surface)}.light .demo .s-spark circle{fill:var(--preview-surface)}.light .demo .s-scatter svg{background-image:linear-gradient(var(--canvas-grid) 1px,transparent 1px),linear-gradient(90deg,var(--canvas-grid) 1px,transparent 1px)}
+.light .demo :where(.s-hold.done,.s-slide-fill:hover,.s-multi>button i.on,.s-product button,.s-milestone button.active i,.s-media>button,.s-drawer-wrap>button i,.s-complete>span,.s-complete button,.s-themes article button){color:var(--component-accent-foreground)}
+
+.light .demo :where(.b1-drag,.b1-countdown,.b1-auto,.b1-limit,.b1-task,.b1-event,.b1-pills,.b1-context,.b1-reconnect,.b1-recovery,.b1-number,.b1-sheet-stage,.b1-edit,.b1-trail,.b1-bars,.b1-matrix,.b1-video,.b1-album,.b1-split,.b1-dashboard){--ink:var(--preview-text);--sub:var(--preview-muted);color:var(--preview-text)}
+.light .demo :where(.b1-drag,.b1-countdown,.b1-auto input,.b1-auto ul,.b1-limit textarea,.b1-task,.b1-event,.b1-pills,.b1-context>button,.b1-context nav,.b1-number,.b1-sheet-stage,.b1-sheet-stage section,.b1-edit,.b1-edit div,.b1-trail,.b1-matrix button,.b1-video,.b1-album,.b1-split,.b1-dashboard){background:var(--preview-surface);border-color:var(--preview-border);color:var(--preview-text);box-shadow:var(--shadow-soft)}
+.light .demo :where(.b1-task button,.b1-event button,.b1-pills button,.b1-context nav button,.b1-sheet-stage section button,.b1-edit button,.b1-bars button,.b1-matrix button,.b1-video button,.b1-album button,.b1-split button,.b1-dashboard nav button){color:var(--preview-muted)}
+.light .demo :where(.b1-pills button[aria-current],.b1-sheet-stage>button){color:var(--component-accent-foreground)}
+.light .demo .b1-skeleton i{background:linear-gradient(100deg,#e1e9ed 30%,#f9fbfc 48%,#e1e9ed 66%);background-size:250% 100%}
+.light .demo .b1-video>div{background:linear-gradient(145deg,var(--preview-raised),var(--preview-surface))}.light .demo .b1-split section+section{background:var(--preview-raised)}.light .demo .b1-dashboard nav,.light .demo .b1-dashboard article{border-color:var(--preview-border)}
+
+.light .demo :where(.b2-direction:hover,.b2-product section>button,.b2-annotate button){color:var(--component-accent-foreground)}
+
+/* Nested tracks and compact controls must not retain dark-only fills. */
+.light .demo :where(.s-drop>span,.s-bars button span,.s-audio i,.s-distribution button,.s-liquid>i,.s-password>i b,.s-download i,.s-shimmer>i,.profile-card .avatar,.progress i){background:var(--preview-raised);border-color:var(--preview-border)}
+.light .demo :where(.s-sidebar button.active,.s-bento button.active,.b1-task button,.b1-event button){background:var(--interactive-active);border-color:var(--preview-border);color:var(--preview-text)}
+.light .demo .s-sidebar button.active,.light .demo .s-bento button.active{background:var(--interactive-active);border-color:var(--preview-border);color:var(--preview-text)}
+.light .demo :where(.s-bars button.active span,.s-audio i.played,.s-distribution button.active,.s-password>i b.on){background:var(--demo-accent)}

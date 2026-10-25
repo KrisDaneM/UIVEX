@@ -1,0 +1,46 @@
+/* UIVEX liquid-chrome design system: one restrained metallic vocabulary. */
+:root{--chrome-edge:linear-gradient(115deg,#ffffffb8 0%,#667985 13%,#1d2830 34%,#dce6ec 52%,#344550 70%,#eef4f7 88%,#708692 100%);--chrome-fill:linear-gradient(145deg,#f6fafc 0%,#9dabb5 28%,#e8eff4 46%,#657984 69%,#dce5ea 100%);--chrome-panel:linear-gradient(145deg,#162129 0%,#080d11 52%,#1d2931 100%);--chrome-glint:linear-gradient(105deg,transparent 20%,#ffffff1c 42%,#ffffff75 49%,#ffffff16 56%,transparent 76%);--metal-shadow:0 18px 44px #000b,0 1px 0 #ffffff2b inset,0 -1px 0 #000 inset}
+:root.light{--chrome-edge:linear-gradient(115deg,#fff 0%,#9eacb5 18%,#edf2f4 38%,#7f909b 53%,#fff 74%,#a8b6be 100%);--chrome-fill:linear-gradient(145deg,#fff 0%,#cbd3d8 27%,#f9fbfc 48%,#aebac1 72%,#eef2f4 100%);--chrome-panel:linear-gradient(145deg,#fff,#e3e8eb 56%,#f8fafb);--chrome-glint:linear-gradient(105deg,transparent 22%,#ffffff70 44%,#fff 50%,#ffffff44 57%,transparent 75%);--metal-shadow:0 15px 34px #22313b1c,0 1px 0 #fff inset,0 -1px 0 #7c8d971c inset}
+body{background:var(--page)}
+.app-shell{background:radial-gradient(circle at 75% 6%,color-mix(in srgb,var(--accent) 8%,transparent),transparent 25%),var(--page)}
+.site-header{background:color-mix(in srgb,var(--page) 92%,transparent);border-color:color-mix(in srgb,var(--accent) 28%,var(--border));box-shadow:0 10px 35px #0004}
+.brand span,.eyebrow,.ref-eyebrow,.card-body>div span:first-child{color:var(--accent)}
+.brand i{background:var(--accent-bright);box-shadow:0 0 8px var(--accent)}
+.desktop-nav a:after{background:var(--chrome-fill);box-shadow:0 0 12px #dbe8ef66}
+.search-trigger,.icon-btn,.input,.btn{border-color:var(--border);background:linear-gradient(145deg,color-mix(in srgb,var(--surface) 94%,#fff 6%),var(--surface-muted));box-shadow:0 1px 0 #fff1 inset,0 8px 20px #0002}
+.btn-primary{border-color:#aebbc4;background:var(--chrome-fill);color:#101820;box-shadow:0 8px 23px #0006,0 1px 0 #fff inset}
+.btn:hover,.icon-btn:hover,.search-trigger:hover{border-color:var(--accent);box-shadow:0 10px 26px #0005,0 1px 0 #fff4 inset}
+.surface,.component-card,.info-panel,.code-panel,.studio-library,.studio-canvas,.inspector,.studio-code{position:relative;background:var(--chrome-panel);border-color:var(--border);box-shadow:var(--metal-shadow)}
+.surface:before,.component-card:before{content:"";position:absolute;z-index:0;pointer-events:none;inset:0;border-radius:inherit;background:var(--chrome-glint);opacity:.12;transform:translateX(-55%);transition:transform .65s ease,opacity .3s}
+.component-card:hover:before,.surface:hover:before{transform:translateX(42%);opacity:.24}
+.component-card>*{position:relative;z-index:1}
+.creative-grid .component-card{background:var(--chrome-panel);border-color:#42545f;box-shadow:var(--metal-shadow)}
+.creative-grid .component-card:hover{border-color:#b9c6ce;box-shadow:0 22px 50px #000c,0 0 0 1px #dbe5eb40 inset}
+.creative-grid .card-preview .demo,.demo,.canvas-scroll{background-color:var(--canvas-background);background-image:linear-gradient(var(--canvas-grid) 1px,transparent 1px),linear-gradient(90deg,var(--canvas-grid) 1px,transparent 1px),radial-gradient(circle at 74% 8%,#dce8ef0c,transparent 42%)}
+.card-body,.component-card .card-body{background:linear-gradient(180deg,color-mix(in srgb,var(--surface) 96%,#fff 4%),var(--surface))}
+.favorite{background:linear-gradient(145deg,#27343cdd,#080d11ee);border-color:#70818b;color:#e8eff4;box-shadow:0 8px 20px #0008,0 1px 0 #fff3 inset}.favorite.liked{color:#fff;box-shadow:0 0 18px #dce8ef45}
+.site-footer{background:linear-gradient(180deg,#0a1015,#05080b);border-top-color:#7f909b;box-shadow:0 -1px 18px #dce8ef14}
+.mobile-menu,.search-modal>div{background:linear-gradient(145deg,#1d2830,#080d11);box-shadow:-20px 0 60px #000b,0 1px 0 #fff2 inset}
+.tag,.saved-filter,.category-chips button{background:linear-gradient(145deg,var(--surface-raised),var(--surface));border-color:var(--border)}
+.saved-filter.active,.category-chips button.active{border-color:var(--accent);color:var(--text);box-shadow:0 0 0 1px #fff1 inset}
+.code,.studio-code .studio-code-content{background:#070b0f;color:#d6e0e6;border-color:#344550}
+.studio-code>header{background:linear-gradient(180deg,#1d2830,#101820)}
+.canvas-toolbar,.preview-toolbar,.state-row,.controls fieldset,.inspector>header,.library-tools{border-color:var(--border)}
+.library-group a.active,.viewport-presets button.active,.studio-mobile-tabs button.active{background:linear-gradient(145deg,#344550,#172128);color:#e8eff4;border-color:#71838e}
+.controls legend,.studio-code .code-meta strong,.library-group a.active{color:var(--accent)}
+.route-loading span{border-color:#344550;border-top-color:#e8eff4}
+::selection{background:#bfcad3;color:#101820}
+
+.light .app-shell{background:radial-gradient(circle at 75% 5%,#ffffff,transparent 28%),var(--page)}
+.light .site-header{box-shadow:0 9px 30px #26394312}
+.light .surface,.light .component-card,.light .info-panel,.light .code-panel,.light .studio-library,.light .studio-canvas,.light .inspector,.light .studio-code{background:var(--chrome-panel);box-shadow:var(--metal-shadow)}
+.light .creative-grid .component-card{background:var(--chrome-panel);border-color:#c2ccd2;box-shadow:var(--metal-shadow)}
+.light .favorite{background:linear-gradient(145deg,#fff,#dfe5e8);color:#263640;border-color:#a9b6be;box-shadow:0 7px 18px #2639431f,0 1px 0 #fff inset}
+.light .site-footer{background:linear-gradient(180deg,#eef2f4,#dfe5e8);border-color:#a1afb8;color:#101820}
+.light .mobile-menu,.light .search-modal>div{background:linear-gradient(145deg,#fff,#e3e8eb)}
+.light .code,.light .studio-code .studio-code-content{background:#f7f9fa;color:#253841;border-color:#c2ccd2}
+.light .studio-code>header{background:linear-gradient(180deg,#fff,#e5eaed)}
+.light .library-group a.active,.light .viewport-presets button.active,.light .studio-mobile-tabs button.active{background:linear-gradient(145deg,#fff,#d5dde1);color:#18262e;border-color:#94a5b0}
+
+@media(max-width:700px){.surface:before,.component-card:before{display:none}.site-header{backdrop-filter:blur(7px)}}
+@media(prefers-reduced-motion:reduce){.surface:before,.component-card:before{transition:none;transform:none}.component-card:hover:before,.surface:hover:before{transform:none}}

@@ -1,0 +1,24 @@
+import { useEffect, useRef, useState } from 'react'
+
+const vertex=`#version 300 es
+in vec2 position;out vec2 uv;
+void main(){uv=position*.5+.5;gl_Position=vec4(position,0.,1.);}`
+const fragment=`#version 300 es
+precision highp float;in vec2 uv;out vec4 outColor;uniform vec2 resolution;uniform float time;uniform float lightMode;
+float ridge(vec2 p,float t){return sin(p.x*2.15+p.y*.72+t*.34)*.34+sin(p.x*.82-p.y*2.45-t*.23+1.7)*.25+sin((p.x+p.y)*3.25+t*.17)*.11;}
+float surface(vec2 p,float t){float bend=sin(p.x*.63+t*.09)*.42;float a=exp(-pow(abs(p.y+ridge(p,t)-.18+bend),2.)*17.);float b=exp(-pow(abs(p.y*.82-ridge(p*vec2(.78,1.2),-t*.8)+.63),2.)*29.);float c=exp(-pow(abs(p.y+sin(p.x*1.4-t*.15)*.22-1.13),2.)*24.);return a*.9+b*.7+c*.5;}
+void main(){vec2 p=uv*2.-1.;p.x*=resolution.x/max(resolution.y,1.);float e=.0045,h=surface(p,time);vec2 g=vec2(surface(p+vec2(e,0),time)-surface(p-vec2(e,0),time),surface(p+vec2(0,e),time)-surface(p-vec2(0,e),time))/(2.*e);vec3 n=normalize(vec3(-g*1.1,1));vec3 view=normalize(vec3(p*.22,1));float fres=pow(1.-max(dot(n,view),0.),2.2);vec3 key=normalize(vec3(-.44,.58,.72)),rim=normalize(vec3(.72,-.18,.67));float s=pow(max(dot(reflect(-key,n),view),0.),54.);float s2=pow(max(dot(reflect(-rim,n),view),0.),22.);float streak=pow(max(0.,.5+.5*sin(p.x*4.2-p.y*2.1+time*.28+n.x*4.)),12.);vec3 dark=mix(vec3(.008,.014,.019),vec3(.055,.085,.105),h);vec3 silver=mix(vec3(.10,.15,.18),vec3(.88,.93,.97),clamp(s*1.35+s2*.72+streak*h*.32+fres*.35,0.,1.));float mask=smoothstep(.035,.24,h);vec3 color=mix(dark,silver,mask);if(lightMode>.5)color=mix(vec3(.91,.93,.94),vec3(.98),mask*.35)+silver*mask*.18;color*=mix(.62,1.,smoothstep(1.5,.25,length(p*.62)));outColor=vec4(color,clamp(mask*.94+.18,0.,1.));}`
+
+function makeShader(gl:WebGL2RenderingContext,type:number,source:string){const value=gl.createShader(type);if(!value)return null;gl.shaderSource(value,source);gl.compileShader(value);if(!gl.getShaderParameter(value,gl.COMPILE_STATUS)){gl.deleteShader(value);return null}return value}
+
+export function LiquidChromeScene({className=''}:{className?:string}){
+ const canvas=useRef<HTMLCanvasElement>(null),[fallback,setFallback]=useState(false)
+ useEffect(()=>{const node=canvas.current;if(!node)return;const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches,gl=node.getContext('webgl2',{alpha:true,antialias:false,powerPreference:'low-power'});if(!gl){setFallback(true);return}
+  const vs=makeShader(gl,gl.VERTEX_SHADER,vertex),fs=makeShader(gl,gl.FRAGMENT_SHADER,fragment),program=gl.createProgram();if(!vs||!fs||!program){setFallback(true);return}gl.attachShader(program,vs);gl.attachShader(program,fs);gl.linkProgram(program);if(!gl.getProgramParameter(program,gl.LINK_STATUS)){setFallback(true);return}
+  const buffer=gl.createBuffer(),position=gl.getAttribLocation(program,'position'),resolution=gl.getUniformLocation(program,'resolution'),clock=gl.getUniformLocation(program,'time'),mode=gl.getUniformLocation(program,'lightMode');gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);gl.useProgram(program);gl.enableVertexAttribArray(position);gl.vertexAttribPointer(position,2,gl.FLOAT,false,0,0)
+  let frame=0,visible=true;const start=performance.now(),resize=()=>{const box=node.getBoundingClientRect(),dpr=Math.min(devicePixelRatio,innerWidth<700?1:1.5),w=Math.max(1,Math.round(box.width*dpr)),h=Math.max(1,Math.round(box.height*dpr));if(node.width!==w||node.height!==h){node.width=w;node.height=h}gl.viewport(0,0,w,h);gl.uniform2f(resolution,w,h)};const draw=(now:number)=>{resize();gl.uniform1f(clock,reduce?1.7:(now-start)/1000);gl.uniform1f(mode,document.documentElement.classList.contains('light')?1:0);gl.drawArrays(gl.TRIANGLES,0,3);if(!reduce&&visible)frame=requestAnimationFrame(draw)}
+  const observer=new IntersectionObserver(([entry])=>{if(entry.isIntersecting&&!visible&&!reduce){visible=true;frame=requestAnimationFrame(draw)}else visible=entry.isIntersecting},{rootMargin:'120px'});observer.observe(node);draw(start);const lost=(event:Event)=>{event.preventDefault();cancelAnimationFrame(frame);setFallback(true)};node.addEventListener('webglcontextlost',lost)
+  return()=>{observer.disconnect();cancelAnimationFrame(frame);node.removeEventListener('webglcontextlost',lost);gl.deleteBuffer(buffer);gl.deleteProgram(program);gl.deleteShader(vs);gl.deleteShader(fs)}
+ },[])
+ return <canvas ref={canvas} className={`liquid-chrome-canvas ${fallback?'is-fallback':''} ${className}`} aria-hidden="true"/>
+}

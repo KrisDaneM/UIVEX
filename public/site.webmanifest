@@ -1,0 +1,13 @@
+{
+  "name": "UIVEX — Interactive React UI Components",
+  "short_name": "UIVEX",
+  "description": "Interactive React components with live previews, customization, and reusable source code.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#101820",
+  "theme_color": "#101820",
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "/apple-touch-icon.png", "sizes": "180x180", "type": "image/png", "purpose": "any" }
+  ]
+}

@@ -1,0 +1,15 @@
+node_modules/
+dist/
+*.tsbuildinfo
+vite.config.js
+vite.config.d.ts
+.env
+.env.*
+!.env.example
+.vercel/
+coverage/
+playwright-report/
+test-results/
+*.log
+Thumbs.db
+.DS_Store

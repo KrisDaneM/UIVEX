@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /workspace
+Disallow: /playground/
+
+# The production build appends the absolute Sitemap URL using SITE_URL,
+# VITE_SITE_URL, or VERCEL_PROJECT_PRODUCTION_URL.

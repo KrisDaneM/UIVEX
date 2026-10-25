@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#101820" />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <script>
+      try {
+        const saved = JSON.parse(localStorage.getItem('uivex:v1:theme'));
+        const theme = saved === 'light' || saved === 'dark' ? saved : (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+        document.documentElement.classList.toggle('light', theme === 'light');
+        document.documentElement.dataset.theme = theme;
+        document.querySelector('meta[name="theme-color"]').content = theme === 'light' ? '#F3F7F8' : '#101820';
+      } catch {}
+    </script>
+    <meta name="description" content="Discover interactive React UI components with creative animations, live previews, customizable designs, and reusable code. Explore and build with UIVEX." />
+    <meta property="og:title" content="UIVEX — Interactive React UI Components &amp; Design Playground" />
+    <meta property="og:description" content="Discover interactive React UI components with creative animations, live previews, customizable designs, and reusable code. Explore and build with UIVEX." />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="UIVEX" />
+    <meta property="og:image" content="/uivex-social.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="UIVEX — Interactive React UI Components &amp; Design Playground" />
+    <meta name="twitter:description" content="Discover interactive React UI components with creative animations, live previews, customizable designs, and reusable code. Explore and build with UIVEX." />
+    <meta name="twitter:image" content="/uivex-social.png" />
+    <title>UIVEX — Interactive React UI Components &amp; Design Playground</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

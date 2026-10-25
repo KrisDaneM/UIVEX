@@ -1,0 +1,29 @@
+@media (max-width: 800px) {
+  .canvas-frame { max-width: 100%; }
+}
+
+/* Playground is tabbed on compact screens; keep its simulated viewport local. */
+@media (max-width: 800px) {
+  .studio-mobile-tabs {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    overflow: hidden;
+  }
+
+  .studio-grid,
+  .studio-grid > *,
+  .studio-main,
+  .studio-canvas,
+  .canvas-toolbar,
+  .canvas-scroll,
+  .studio-code {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .studio-grid > .studio-library.mobile-show,
+  .studio-grid > .inspector.mobile-show,
+  .studio-grid > .studio-code.mobile-show { display: flex; }
+  .studio-grid > .studio-main.mobile-show { display: grid; }
+  .library-list { display: block; }
+}
