@@ -5,10 +5,13 @@ const root = process.cwd()
 const dist = join(root, 'dist')
 const rawOrigin = process.env.SITE_URL || process.env.VITE_SITE_URL || (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : 'http://localhost:4173')
 const origin = new URL(rawOrigin).origin
+if (process.env.VERCEL_ENV === 'production' && new URL(origin).hostname === 'localhost') {
+  throw new Error('Production SEO requires SITE_URL, VITE_SITE_URL, or VERCEL_PROJECT_PRODUCTION_URL; refusing to emit localhost canonicals.')
+}
 const socialImage = `${origin}/uivex-social.png`
 const defaultDescription = 'Discover interactive React UI components with creative animations, live previews, customizable designs, and reusable code. Explore and build with UIVEX.'
 
-const sourceFiles = ['src/data/componentRegistry.ts', 'src/data/studioExpansion.ts', 'src/data/batchOneExpansion.ts', 'src/data/batchTwoExpansion.ts']
+const sourceFiles = ['src/data/componentRegistry.ts', 'src/data/studioExpansion.ts', 'src/data/batchOneExpansion.ts', 'src/data/batchTwoExpansion.ts', 'src/data/batchThreeExpansion.ts']
 const components = []
 for (const file of sourceFiles) {
   const source = await readFile(join(root, file), 'utf8')
@@ -23,14 +26,14 @@ const bySlug = new Map(components.map((component) => [component.slug, component]
 if (bySlug.size !== components.length) throw new Error(`Duplicate registry slugs detected (${components.length} entries, ${bySlug.size} unique).`)
 
 const pages = [
-  { path: '/', title: 'UIVEX — Interactive React UI Components & Design Playground', description: defaultDescription, heading: 'Build modern interfaces, faster.' },
-  { path: '/explore', title: 'Explore Interactive React Components | UIVEX', description: `Browse ${components.length} interactive React and TypeScript components with live previews, accessibility notes, responsive states, and reusable source code.`, heading: 'Explore interactive React components.' },
-  { path: '/playground', title: 'React Component Playground & Customizer | UIVEX', description: 'Customize React component styles and states in a live responsive playground, then copy or download source code that reflects your settings.', heading: 'Customize React components in the Playground.' },
-  { path: '/guide', title: 'UIVEX Guide — React Component Setup & Usage', description: 'Learn how to explore, customize, test, copy, and export UIVEX React components with responsive and accessibility-focused guidance.', heading: 'UIVEX component guide.' },
-  { path: '/about', title: 'About UIVEX — Interactive Component Design Studio', description: 'Learn how UIVEX brings working React previews, local customization, accessibility notes, and faithful source export into one frontend studio.', heading: 'About UIVEX.' },
-  { path: '/changelog', title: 'UIVEX Changelog — Product Updates & Releases', description: 'Read verified UIVEX release notes covering new interactive components, Playground improvements, accessibility work, and design system updates.', heading: 'UIVEX changelog.' },
-  { path: '/workspace', title: 'Local Component Workspace | UIVEX', description: 'Manage favorite components and saved UIVEX presets stored privately in this browser.', heading: 'Your local UIVEX workspace.', robots: 'noindex, nofollow' },
-  ...components.map((item) => ({ path: `/components/${item.slug}`, title: `${item.title} React Component | UIVEX`, description: `${item.description} Live preview, customization, and reusable React TypeScript source.`, heading: `${item.title} React component.`, component: item })),
+  { path: '/', title: 'UIVEX | Home', description: defaultDescription, heading: 'Build modern interfaces, faster.' },
+  { path: '/explore', title: 'UIVEX | Explore', description: `Browse ${components.length} interactive React and TypeScript components with live previews, accessibility notes, responsive states, and reusable source code.`, heading: 'Explore interactive React components.' },
+  { path: '/playground', title: 'UIVEX | Playground', description: 'Customize React component styles and states in a live responsive playground, then copy or download source code that reflects your settings.', heading: 'Customize React components in the Playground.' },
+  { path: '/guide', title: 'UIVEX | Guide', description: 'Learn how to explore, customize, test, copy, and export UIVEX React components with responsive and accessibility-focused guidance.', heading: 'UIVEX component guide.' },
+  { path: '/about', title: 'UIVEX | About', description: 'Learn how UIVEX brings working React previews, local customization, accessibility notes, and faithful source export into one frontend studio.', heading: 'About UIVEX.' },
+  { path: '/changelog', title: 'UIVEX | Changelog', description: 'Read verified UIVEX release notes covering new interactive components, Playground improvements, accessibility work, and design system updates.', heading: 'UIVEX changelog.' },
+  { path: '/workspace', title: 'UIVEX | Workspace', description: 'Manage favorite components and saved UIVEX presets stored privately in this browser.', heading: 'Your local UIVEX workspace.', robots: 'noindex, nofollow' },
+  ...components.map((item) => ({ path: `/components/${item.slug}`, title: `UIVEX | ${item.title}`, description: `${item.description} Live preview, customization, and reusable React TypeScript source.`, heading: `${item.title} React component.`, component: item })),
 ]
 
 const template = await readFile(join(dist, 'index.html'), 'utf8')

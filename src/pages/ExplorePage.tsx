@@ -1,13 +1,13 @@
 import { Heart, Search, SlidersHorizontal, X } from 'lucide-react'
 import { useMemo } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { useUivex } from '../app/UivexContext'
+import { useWorkspace } from '../app/UivexContext'
 import { categories, componentRegistry } from '../data/componentRegistry'
 import { ComponentCard } from '../components/ui/ComponentCard'
 import '../styles/pages.css'
 
 export default function ExplorePage(){
- const [params,setParams]=useSearchParams();const {favorites}=useUivex();const q=params.get('q')??'';const category=params.get('category')??'All';const complexity=params.get('complexity')??'All';const motion=params.get('motion')??'All';const sort=params.get('sort')??'newest';const saved=params.get('saved')==='true'
+ const [params,setParams]=useSearchParams();const {favorites}=useWorkspace();const q=params.get('q')??'';const category=params.get('category')??'All';const complexity=params.get('complexity')??'All';const motion=params.get('motion')??'All';const sort=params.get('sort')??'newest';const saved=params.get('saved')==='true'
  const set=(key:string,value:string)=>{const next=new URLSearchParams(params);if(value==='All'||!value||value==='false')next.delete(key);else next.set(key,value);setParams(next,{replace:true})}
  const filtered=useMemo(()=>componentRegistry.filter(item=>{const hay=`${item.title} ${item.description} ${item.tags.join(' ')}`.toLowerCase();return(!q||hay.includes(q.toLowerCase())||synonym(q,hay))&&(category==='All'||item.category===category)&&(complexity==='All'||item.complexity===complexity)&&(motion==='All'||String(item.animated)===motion)&&(!saved||favorites.includes(item.slug))}).sort((a,b)=>sort==='name'?a.title.localeCompare(b.title):sort==='category'?a.category.localeCompare(b.category)||a.title.localeCompare(b.title):b.added.localeCompare(a.added)||a.title.localeCompare(b.title)),[q,category,complexity,motion,sort,saved,favorites])
  const dirty=!!q||category!=='All'||complexity!=='All'||motion!=='All'||saved

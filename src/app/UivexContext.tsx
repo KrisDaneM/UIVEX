@@ -1,23 +1,25 @@
-import { createContext, useCallback, useContext, useEffect, useState } from 'react'
+import { createContext, useCallback, useContext, useEffect, useLayoutEffect, useMemo, useState } from 'react'
 import { componentRegistry } from '../data/componentRegistry'
 import type { ComponentConfig, SavedPreset } from '../types'
 
 type Theme = 'dark' | 'light'
 interface StoreData { favorites: string[]; presets: SavedPreset[]; recent: string[] }
-interface UivexContextValue extends StoreData {
-  theme: Theme; storageAvailable: boolean; notice: string
-  setTheme: (theme: Theme) => void; toggleFavorite: (slug: string) => void
+interface WorkspaceContextValue extends StoreData {
+  storageAvailable: boolean; notice: string
+  toggleFavorite: (slug: string) => void
   addRecent: (slug: string) => void; savePreset: (slug: string, config: ComponentConfig, name?: string) => void
   deletePreset: (id: string) => void; clearAll: () => void; importWorkspace: (text: string) => {ok:boolean;message:string}
   exportWorkspace: () => string; announce: (message: string) => void
 }
 const validSlugs = new Set(componentRegistry.map((x)=>x.slug))
-const Ctx = createContext<UivexContextValue | null>(null)
+const ThemeCtx = createContext<{theme:Theme;setTheme:(theme:Theme)=>void}|null>(null)
+const WorkspaceCtx = createContext<WorkspaceContextValue | null>(null)
 const keys = { theme:'uivex:v1:theme', favorites:'uivex:v1:favorites', presets:'uivex:v1:presets', recent:'uivex:v1:recent' }
 
 function safeRead<T>(key:string, fallback:T):T { try { const value=localStorage.getItem(key); return value ? JSON.parse(value) as T : fallback } catch { return fallback } }
 function initialTheme():Theme { const saved=safeRead<Theme|null>(keys.theme,null);if(saved==='dark'||saved==='light')return saved;return window.matchMedia?.('(prefers-color-scheme: light)').matches?'light':'dark' }
 function canStore(){ try { localStorage.setItem('uivex:test','1'); localStorage.removeItem('uivex:test'); return true } catch { return false } }
+function applyTheme(theme:Theme){const root=document.documentElement;root.classList.toggle('light',theme==='light');root.dataset.theme=theme;document.querySelector('meta[name="theme-color"]')?.setAttribute('content',theme==='light'?'#F3F7F8':'#101820')}
 
 export function UivexProvider({children}:{children:React.ReactNode}){
   const [storageAvailable] = useState(canStore)
@@ -27,18 +29,25 @@ export function UivexProvider({children}:{children:React.ReactNode}){
   const [recent,setRecent] = useState<string[]>(()=>safeRead<string[]>(keys.recent,[]).filter(x=>validSlugs.has(x)).slice(0,12))
   const [notice,setNotice] = useState('')
   const announce=useCallback((message:string)=>{setNotice('');setTimeout(()=>setNotice(message),10)},[])
-  useEffect(()=>{const root=document.documentElement;root.classList.toggle('light',theme==='light');root.dataset.theme=theme;document.querySelector('meta[name="theme-color"]')?.setAttribute('content',theme==='light'?'#F3F7F8':'#101820');try{localStorage.setItem(keys.theme,JSON.stringify(theme))}catch{/* session fallback */}},[theme])
+  useLayoutEffect(()=>applyTheme(theme),[theme])
+  useEffect(()=>{try{localStorage.setItem(keys.theme,JSON.stringify(theme))}catch{/* session fallback */}},[theme])
   useEffect(()=>{try{localStorage.setItem(keys.favorites,JSON.stringify(favorites));localStorage.setItem(keys.presets,JSON.stringify(presets));localStorage.setItem(keys.recent,JSON.stringify(recent))}catch{/* session fallback */}},[favorites,presets,recent])
-  const setTheme=(value:Theme)=>setThemeState(value)
-  const toggleFavorite=(slug:string)=>{if(!validSlugs.has(slug))return;setFavorites(x=>x.includes(slug)?x.filter(v=>v!==slug):[...x,slug]);announce(favorites.includes(slug)?'Removed from favorites':'Added to favorites')}
+  const setTheme=useCallback((value:Theme)=>{applyTheme(value);setThemeState(value)},[])
+  const toggleFavorite=useCallback((slug:string)=>{if(!validSlugs.has(slug))return;setFavorites(current=>{const removing=current.includes(slug);announce(removing?'Removed from favorites':'Added to favorites');return removing?current.filter(value=>value!==slug):[...current,slug]})},[announce])
   const addRecent=useCallback((slug:string)=>{if(validSlugs.has(slug))setRecent(x=>[slug,...x.filter(v=>v!==slug)].slice(0,12))},[])
-  const savePreset=(slug:string,config:ComponentConfig,name?:string)=>{if(!validSlugs.has(slug))return;const p={id:crypto.randomUUID?.()??`${Date.now()}`,name:name?.trim()||`Preset ${presets.length+1}`,slug,config,createdAt:new Date().toISOString()};setPresets(x=>[p,...x].slice(0,100));announce('Preset saved locally')}
-  const deletePreset=(id:string)=>{setPresets(x=>x.filter(p=>p.id!==id));announce('Preset removed')}
-  const clearAll=()=>{setFavorites([]);setPresets([]);setRecent([]);announce('Local workspace cleared')}
-  const exportWorkspace=()=>JSON.stringify({schema:'uivex-workspace',version:1,exportedAt:new Date().toISOString(),favorites,presets,recent},null,2)
-  const importWorkspace=(text:string)=>{try{const x=JSON.parse(text);if(x?.schema!=='uivex-workspace'||x?.version!==1||!Array.isArray(x.favorites)||!Array.isArray(x.presets)||!Array.isArray(x.recent))throw new Error();const f=x.favorites.filter((s:unknown)=>typeof s==='string'&&validSlugs.has(s));const r=x.recent.filter((s:unknown)=>typeof s==='string'&&validSlugs.has(s)).slice(0,12);const p=x.presets.filter((v:any)=>v&&typeof v.id==='string'&&typeof v.name==='string'&&validSlugs.has(v.slug)&&v.config&&typeof v.config.label==='string').slice(0,100);setFavorites(f);setRecent(r);setPresets(p);announce(`Imported ${f.length} favorites and ${p.length} presets`);return{ok:true,message:'Workspace imported successfully.'}}catch{return{ok:false,message:'That file is not a valid UIVEX workspace export. Your current data was not changed.'}}}
-  const value={theme,setTheme,toggleFavorite,favorites,presets,recent,storageAvailable,notice,addRecent,savePreset,deletePreset,clearAll,importWorkspace,exportWorkspace,announce}
-  return <Ctx.Provider value={value}>{children}<div className="sr-only" aria-live="polite">{notice}</div></Ctx.Provider>
+  const savePreset=useCallback((slug:string,config:ComponentConfig,name?:string)=>{if(!validSlugs.has(slug))return;setPresets(current=>{const preset={id:crypto.randomUUID?.()??`${Date.now()}`,name:name?.trim()||`Preset ${current.length+1}`,slug,config,createdAt:new Date().toISOString()};return[preset,...current].slice(0,100)});announce('Preset saved locally')},[announce])
+  const deletePreset=useCallback((id:string)=>{setPresets(x=>x.filter(p=>p.id!==id));announce('Preset removed')},[announce])
+  const clearAll=useCallback(()=>{setFavorites([]);setPresets([]);setRecent([]);announce('Local workspace cleared')},[announce])
+  const exportWorkspace=useCallback(()=>JSON.stringify({schema:'uivex-workspace',version:1,exportedAt:new Date().toISOString(),favorites,presets,recent},null,2),[favorites,presets,recent])
+  const importWorkspace=useCallback((text:string)=>{try{const x=JSON.parse(text);if(x?.schema!=='uivex-workspace'||x?.version!==1||!Array.isArray(x.favorites)||!Array.isArray(x.presets)||!Array.isArray(x.recent))throw new Error();const f=x.favorites.filter((s:unknown)=>typeof s==='string'&&validSlugs.has(s));const r=x.recent.filter((s:unknown)=>typeof s==='string'&&validSlugs.has(s)).slice(0,12);const p=x.presets.filter((v:any)=>v&&typeof v.id==='string'&&typeof v.name==='string'&&validSlugs.has(v.slug)&&v.config&&typeof v.config.label==='string').slice(0,100);setFavorites(f);setRecent(r);setPresets(p);announce(`Imported ${f.length} favorites and ${p.length} presets`);return{ok:true,message:'Workspace imported successfully.'}}catch{return{ok:false,message:'That file is not a valid UIVEX workspace export. Your current data was not changed.'}}},[announce])
+  const themeValue=useMemo(()=>({theme,setTheme}),[theme,setTheme])
+  const workspaceValue=useMemo(()=>({toggleFavorite,favorites,presets,recent,storageAvailable,notice,addRecent,savePreset,deletePreset,clearAll,importWorkspace,exportWorkspace,announce}),[toggleFavorite,favorites,presets,recent,storageAvailable,notice,addRecent,savePreset,deletePreset,clearAll,importWorkspace,exportWorkspace,announce])
+  return <ThemeCtx.Provider value={themeValue}><WorkspaceCtx.Provider value={workspaceValue}>{children}<div className="sr-only" aria-live="polite">{notice}</div></WorkspaceCtx.Provider></ThemeCtx.Provider>
 }
 // eslint-disable-next-line react-refresh/only-export-components
-export function useUivex(){const ctx=useContext(Ctx);if(!ctx)throw new Error('useUivex must be used inside UivexProvider');return ctx}
+export function useTheme(){const ctx=useContext(ThemeCtx);if(!ctx)throw new Error('useTheme must be used inside UivexProvider');return ctx}
+// eslint-disable-next-line react-refresh/only-export-components
+export function useWorkspace(){const ctx=useContext(WorkspaceCtx);if(!ctx)throw new Error('useWorkspace must be used inside UivexProvider');return ctx}
+// Backward-compatible aggregate hook for external consumers and existing tests.
+// eslint-disable-next-line react-refresh/only-export-components
+export function useUivex(){return {...useTheme(),...useWorkspace()}}

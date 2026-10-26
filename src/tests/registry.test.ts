@@ -28,6 +28,16 @@ describe('component registry', () => {
     expect(new Set(batch.map((item) => item.slug)).size).toBe(25)
   })
 
+  it('includes 40 distinct components in expansion batch three', () => {
+    const batch = componentRegistry.filter((item) => item.added === '2026-10-26')
+    expect(componentRegistry).toHaveLength(187)
+    expect(batch).toHaveLength(40)
+    expect(new Set(batch.map((item) => item.slug)).size).toBe(40)
+    expect(new Set(batch.map((item) => item.title)).size).toBe(40)
+    expect(getComponent('visual-query-builder')).toBeDefined()
+    expect(getComponent('animation-timeline-scrubber')).toBeDefined()
+  })
+
 })
 
 describe('code generation', () => {

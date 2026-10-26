@@ -1,11 +1,11 @@
 # UIVEX 500-component expansion
 
-Last verified batch: 2026-10-23 · Batch 02
+Last verified batch: 2026-10-26 · Batch 03
 
 ## Status
 
-- Verified registry target after Batch 02: **147 components**
-- Remaining to 500: **353 components**
+- Verified registry target after Batch 03: **187 components**
+- Remaining to 500: **313 components**
 - Duplicate slugs at audit: **0**
 - Duplicate titles at audit: **0**
 - New dependencies: **none**
@@ -14,16 +14,16 @@ Last verified batch: 2026-10-23 · Batch 02
 | Category | Baseline | Batch 01 | Batch 02 | Current | Minimum 30 remaining |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | Buttons | 11 | 2 | 3 | 16 | 14 |
-| Forms | 14 | 2 | 3 | 19 | 11 |
-| Cards | 12 | 2 | 2 | 16 | 14 |
-| Navigation | 10 | 2 | 2 | 14 | 16 |
-| Feedback | 11 | 2 | 2 | 15 | 15 |
+| Forms | 14 | 2 | 3 | 24 | 6 |
+| Cards | 12 | 2 | 2 | 21 | 9 |
+| Navigation | 10 | 2 | 2 | 18 | 12 |
+| Feedback | 11 | 2 | 2 | 16 | 14 |
 | Loaders | 8 | 2 | 3 | 13 | 17 |
 | Overlays | 5 | 2 | 3 | 10 | 20 |
-| Effects | 6 | 2 | 3 | 11 | 19 |
-| Data | 10 | 2 | 2 | 14 | 16 |
-| Media | 8 | 2 | 1 | 11 | 19 |
-| Layouts | 5 | 2 | 1 | 8 | 22 |
+| Effects | 6 | 2 | 3 | 19 | 11 |
+| Data | 10 | 2 | 2 | 20 | 10 |
+| Media | 8 | 2 | 1 | 16 | 14 |
+| Layouts | 5 | 2 | 1 | 14 | 16 |
 
 ## Batch 01 — 22 components
 
@@ -53,6 +53,17 @@ Last verified batch: 2026-10-23 · Batch 02
 - Media: `image-annotation-tool` — Image Annotation Tool
 - Layouts: `reorder-dashboard` — Reorder Dashboard Widgets
 
+## Batch 03 — 40 components
+
+- Forms: `visual-query-builder`, `gradient-stop-editor`, `shortcut-recorder`, `time-slot-selector`, `font-axis-controller`
+- Data: `column-pinning-table`, `chart-range-brush`, `interactive-treemap`, `waterfall-chart`, `comparison-matrix`, `contrast-inspector`
+- Cards: `peel-reveal-card`, `palette-harmony-wheel`, `expandable-product-compare`, `blueprint-card`, `timeline-story-card`
+- Navigation: `dockable-panel-tabs`, `breadcrumb-overflow`, `nested-selection-tree`, `command-history`
+- Layouts: `resizable-split-view`, `breakpoint-ruler`, `spacing-token-explorer`, `drag-reorder-checklist`, `workflow-node-connector`, `editable-kanban-swimlane`
+- Effects: `spring-easing-editor`, `svg-motion-path-editor`, `elastic-grid-selector`, `perspective-fold-reveal`, `interactive-light-surface`, `css-clamp-generator`, `shadow-layer-composer`, `animation-timeline-scrubber`
+- Media: `image-hotspot-editor`, `focal-point-selector`, `audio-segment-selector`, `perspective-image-showcase`, `media-contact-sheet`
+- Feedback: `offline-action-queue`
+
 ## Architecture
 
 - Batch metadata: `src/data/batchOneExpansion.ts`
@@ -61,10 +72,19 @@ Last verified batch: 2026-10-23 · Batch 02
 - Batch 02 metadata: `src/data/batchTwoExpansion.ts`
 - Batch 02 interactive previews and component-specific exports: `src/components/catalog/BatchTwoPreview.tsx`
 - Batch 02 responsive, theme-aware styles: `src/styles/batch-two-catalog.css`
+- Batch 03 metadata: `src/data/batchThreeExpansion.ts`
+- Batch 03 interactive previews and component-specific exports: `src/components/catalog/BatchThreePreview.tsx`
+- Batch 03 responsive, theme-aware styles: `src/styles/batch-three-catalog.css`
 - Existing registry, Explore filters, details, Playground, favorites, presets, Copy, and Download automatically consume the typed registry entries.
 
 ## Verification checklist
 
+- Batch 03 registry audit: 187 total components; 40 Batch 03 entries; SEO generator confirmed unique public slugs while emitting 193 sitemap URLs.
+- Batch 03 TypeScript: passed through the production build.
+- Batch 03 ESLint: passed with three non-blocking Fast Refresh warnings caused by colocated preview routing/code-export helpers.
+- Batch 03 production build: passed; the new preview module is emitted as its own lazy route chunk.
+- Batch 03 automated tests added: all-preview render coverage, query rule interaction, contrast result, exact registry count, and slug/title uniqueness.
+- Batch 03 Vitest execution: blocked before test discovery by the existing Windows Tailwind native-module `spawn EPERM` / unreadable oxide binary failure.
 - TypeScript: passed (`tsc -b`)
 - ESLint: passed with five non-blocking Fast Refresh warnings caused by colocated preview registry/code exports
 - Registry audit: 147 total, zero duplicate slugs, zero duplicate titles

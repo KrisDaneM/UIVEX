@@ -1,13 +1,12 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
-import { ArrowRight, Braces, Check, ChevronRight, Clipboard, Code2, ExternalLink, Heart, LayoutGrid, MonitorCog, Search, SlidersHorizontal, Sparkles } from 'lucide-react'
+import { useEffect, useRef } from 'react'
+import { ArrowRight, Braces, Check, Code2, Heart, Play, Search, SlidersHorizontal } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { motion, useMotionValue, useReducedMotion, useSpring } from 'motion/react'
+import { motion } from 'motion/react'
 import { componentRegistry } from '../data/componentRegistry'
 import { CatalogPreview } from '../components/catalog/CatalogPreview'
-import { useUivex } from '../app/UivexContext'
-import { copyText } from '../utils/code'
+import { useWorkspace } from '../app/UivexContext'
 import { LiquidChromeScene } from '../components/visuals/LiquidChromeScene'
 import '../styles/home-redesign.css'
 import '../styles/chrome-home.css'
@@ -19,32 +18,46 @@ export default function HomePage() {
   const page = useRef<HTMLDivElement>(null)
   const navigate = useNavigate()
   useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
-    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return
+    const pageRoot = page.current
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches
     const context = gsap.context(() => {
-      gsap.from('[data-hero-reveal]', { y: 22, opacity: 0, duration: .72, stagger: .09, ease: 'power3.out' })
-      gsap.from('.hero-editor-wrap', { x: 38, y: 18, rotateY: -6, opacity: 0, duration: 1, delay: .22, ease: 'power3.out' })
-      gsap.from('.hero-orbit path', { strokeDashoffset: 800, duration: 1.8, delay: .35, ease: 'power2.out' })
-      gsap.utils.toArray<HTMLElement>('[data-scroll-reveal]').forEach((element) => gsap.from(element, { scrollTrigger: { trigger: element, start: 'top 88%', once: true }, y: 24, opacity: 0, duration: .65, ease: 'power2.out' }))
-      gsap.from('.home-feature-card', { scrollTrigger: { trigger: '.home-feature-grid', start: 'top 86%', once: true }, y: 24, opacity: 0, stagger: .08, duration: .55, ease: 'power2.out' })
+      if (!reduced) {
+        const silver = gsap.utils.toArray<HTMLElement>('.hero-line.silver .cinematic-letter')
+        const cyan = gsap.utils.toArray<HTMLElement>('.hero-line.cyan .cinematic-letter')
+        const hero = page.current?.querySelector<HTMLElement>('.cinematic-hero')
+        gsap.set([...silver, ...cyan], { transformOrigin: '50% 72%', transformPerspective: 900 })
+        gsap.timeline({ defaults: { ease: 'power3.out' }, onComplete: () => hero?.classList.add('is-ready') })
+          .fromTo(silver, { yPercent: 112, z: -170, rotateX: -68, rotateY: (index) => index % 2 ? 16 : -16, opacity: 0 }, { yPercent: 0, z: 0, rotateX: 0, rotateY: 0, opacity: 1, duration: 1.05, stagger: .025 }, .08)
+          .fromTo('.hero-line.silver .hero-line-glint', { xPercent: -42, opacity: 0 }, { xPercent: 42, opacity: 1, duration: .7, stagger: .1, ease: 'power2.inOut' }, .92)
+          .to('.hero-line.silver .hero-line-glint', { opacity: 0, duration: .28 }, 1.46)
+          .fromTo(cyan, { yPercent: 130, z: -220, rotateX: -72, scale: .88, opacity: 0 }, { yPercent: 0, z: 0, rotateX: 0, scale: 1, opacity: 1, duration: .92, stagger: .055, ease: 'back.out(1.35)' }, 1.12)
+          .fromTo('.hero-line.cyan .hero-line-glint', { xPercent: -45, opacity: 0 }, { xPercent: 42, opacity: 1, duration: .72, ease: 'power2.inOut' }, 1.62)
+          .to('.hero-line.cyan .hero-line-glint', { opacity: 0, duration: .3 }, 2.16)
+          .fromTo('.hero-period-ripple', { scale: .1, opacity: .8 }, { scale: 3.8, opacity: 0, duration: .7, ease: 'power2.out' }, 1.95)
+          .fromTo('.cinematic-hero-actions a', { y: 18, opacity: 0, scale: .96 }, { y: 0, opacity: 1, scale: 1, duration: .5, stagger: .1 }, 1.92)
+          .set([...silver, ...cyan], { clearProps: 'transform,opacity' }, 2.65)
+
+        gsap.utils.toArray<HTMLElement>('[data-scroll-reveal]').forEach((element) => gsap.from(element, { scrollTrigger: { trigger: element, start: 'top 88%', once: true }, y: 24, opacity: 0, duration: .65, ease: 'power2.out' }))
+        gsap.from('.home-feature-card', { scrollTrigger: { trigger: '.home-feature-grid', start: 'top 86%', once: true }, y: 24, opacity: 0, stagger: .08, duration: .55, ease: 'power2.out' })
+      } else {
+        page.current?.querySelector('.cinematic-hero')?.classList.add('is-ready')
+      }
     }, page)
-    const refresh = requestAnimationFrame(() => { ScrollTrigger.clearScrollMemory('manual'); ScrollTrigger.refresh(); window.scrollTo({ top: 0, left: 0, behavior: 'auto' }) })
-    return () => { cancelAnimationFrame(refresh); context.revert() }
+    const refresh = requestAnimationFrame(() => ScrollTrigger.refresh())
+    return () => {
+      cancelAnimationFrame(refresh)
+      gsap.killTweensOf(pageRoot?.querySelectorAll('.cinematic-letter') ?? [])
+      context.revert()
+    }
   }, [])
   const search = (value: FormDataEntryValue | string | null) => { const query = String(value ?? '').trim(); navigate(query ? `/explore?q=${encodeURIComponent(query)}` : '/explore') }
   return <div className="reference-home" ref={page}>
     <LiquidChromeScene className="home-chrome-wave"/>
     <div className="home-atmosphere" aria-hidden="true"><i/><i/><i/></div>
-    <section className="reference-hero container">
-      <div className="reference-hero-copy">
-        <div className="hero-pill" data-hero-reveal>UI Component Design Studio</div>
-        <h1 data-hero-reveal>Build modern<br/>interfaces,<br/><em>faster.</em></h1>
-        <div className="reference-hero-actions" data-hero-reveal><Link className="ref-button primary" to="/explore">Explore components <ArrowRight/></Link><Link className="ref-button secondary" to="/playground"><SlidersHorizontal/> Try Playground</Link></div>
-      </div>
-      <div className="reference-hero-visual">
-        <svg className="hero-orbit" viewBox="0 0 760 570" fill="none" aria-hidden="true"><path d="M32 328C126 114 359 11 693 122C794 156 742 409 553 497C360 586 128 507 32 328Z"/><path d="M64 198C259 70 536 64 720 244C588 341 371 388 101 342"/><path d="M93 442C248 271 467 194 702 207"/></svg>
-        <div className="hero-particles" aria-hidden="true">{Array.from({length:18},(_,i)=><i key={i}/>)}</div>
-        <HeroEditor />
+    <section className="reference-hero cinematic-hero container" onPointerMove={animateLettersNearPointer} onPointerLeave={resetHeroLetters}>
+      <div className="cinematic-hero-inner">
+        <h1 className="cinematic-title" aria-label="Build modern interfaces, faster."><HeroLine text="Build modern" tone="silver"/><HeroLine text="interfaces," tone="silver"/><HeroLine text="faster." tone="cyan"/></h1>
+        <div className="reference-hero-actions cinematic-hero-actions"><Link className="ref-button primary cinematic-primary" to="/explore">Explore components</Link><Link className="ref-button secondary" to="/playground"><Play/> Try Playground</Link></div>
       </div>
     </section>
     <section className="reference-search container" data-scroll-reveal>
@@ -62,22 +75,20 @@ export default function HomePage() {
   </div>
 }
 
-function HeroEditor(){
-  const reduceMotion=useReducedMotion();const tiltX=useSpring(useMotionValue(0),{stiffness:150,damping:22,mass:.45});const tiltY=useSpring(useMotionValue(0),{stiffness:150,damping:22,mass:.45})
-  const [variant,setVariant]=useState<'Primary'|'Outline'>('Primary');const [size,setSize]=useState<'Small'|'Medium'|'Large'>('Large');const [icon,setIcon]=useState(true);const [position,setPosition]=useState<'Left'|'Right'>('Left');const [radius,setRadius]=useState(12);const [panel,setPanel]=useState<'Customize'|'Code'>('Customize');const [codeTab,setCodeTab]=useState<'React'|'TypeScript'>('React');const [copied,setCopied]=useState(false)
-  const code=useMemo(()=>`${codeTab==='TypeScript'?"type Props = { onClick?: () => void }\n\n":""}export function GetStarted${codeTab==='TypeScript'?'({ onClick }: Props)':'()'} {\n  return (\n    <button${codeTab==='TypeScript'?' onClick={onClick}':''} className="${variant==='Primary'?'bg-[#E8EFF4] text-[#101820]':'border border-[#BFCAD3] text-[#E8EFF4]'} ${size==='Large'?'px-6 py-3':size==='Medium'?'px-5 py-2.5':'px-4 py-2'}"\n      style={{ borderRadius: ${radius} }}>\n      ${icon&&position==='Left'?'→ ':''}Get started${icon&&position==='Right'?' →':''}\n    </button>\n  )\n}`,[variant,size,icon,position,radius,codeTab])
-  const copy=async()=>{try{await copyText(code);setCopied(true);setTimeout(()=>setCopied(false),1400)}catch{/* visible source remains selectable */}}
-  const point=(event:React.PointerEvent<HTMLDivElement>)=>{if(reduceMotion||event.pointerType==='touch')return;const box=event.currentTarget.getBoundingClientRect();tiltY.set(((event.clientX-box.left)/box.width-.5)*5);tiltX.set(-((event.clientY-box.top)/box.height-.5)*3.5)}
-  const reset=()=>{tiltX.set(0);tiltY.set(0)}
-  return <motion.div className="hero-editor-wrap" whileHover={reduceMotion?undefined:{y:-3}} transition={{duration:.25}} onPointerMove={point} onPointerLeave={reset}><motion.div className="hero-editor-tilt" style={{rotateX:tiltX,rotateY:tiltY}}><div className="editor-back-layer"/><div className="hero-editor">
-    <aside className="editor-library"><div className="editor-logo-tabs"><button className="active">Preview</button><button>Code</button><button>Props</button></div>{[['Button',Sparkles],['Input',Code2],['Toggle',MonitorCog],['Tabs',LayoutGrid],['Card',LayoutGrid],['Navigation',LayoutGrid],['Toast',ExternalLink],['Dialog',LayoutGrid]].map(([label,Icon]:any,i)=><button className={i===0?'selected':''} key={label}><Icon/>{label}</button>)}<Link to="/explore"><b>+</b> More components</Link></aside>
-    <section className="editor-stage"><header><span>Button / Primary</span><button>React <ChevronRight/></button></header><div className="editor-grid"><motion.button layout className={variant==='Primary'?'editor-live-button':'editor-live-button outline'} style={{borderRadius:radius,padding:size==='Large'?'14px 24px':size==='Medium'?'11px 20px':'8px 16px'}}>{icon&&position==='Left'&&<ArrowRight/>}<span>Get started</span>{icon&&position==='Right'&&<ArrowRight/>}</motion.button></div></section>
-    <aside className="editor-controls"><nav><button className={panel==='Customize'?'active':''} onClick={()=>setPanel('Customize')}>Customize</button><button className={panel==='Code'?'active':''} onClick={()=>setPanel('Code')}>Code</button></nav>{panel==='Customize'?<div className="editor-fields"><label>Variant<select value={variant} onChange={e=>setVariant(e.target.value as 'Primary'|'Outline')}><option>Primary</option><option>Outline</option></select></label><label>Size<select value={size} onChange={e=>setSize(e.target.value as 'Small'|'Medium'|'Large')}><option>Small</option><option>Medium</option><option>Large</option></select></label><label className="switch-field"><span>Icon</span><input type="checkbox" checked={icon} onChange={e=>setIcon(e.target.checked)}/></label><label>Icon position<select value={position} onChange={e=>setPosition(e.target.value as 'Left'|'Right')}><option>Left</option><option>Right</option></select></label><label>Radius <output>{radius}</output><input type="range" min="2" max="24" value={radius} onChange={e=>setRadius(+e.target.value)}/></label></div>:<pre>{code}</pre>}</aside>
-    <section className="editor-code"><header><div><button className={codeTab==='React'?'active':''} onClick={()=>setCodeTab('React')}>React</button><button className={codeTab==='TypeScript'?'active':''} onClick={()=>setCodeTab('TypeScript')}>TS</button></div><button onClick={copy}>{copied?<Check/>:<Clipboard/>}{copied?'Copied':'Copy'}</button></header><pre><code>{code}</code></pre></section>
-  </div></motion.div></motion.div>
+function HeroLine({text,tone}:{text:string;tone:'silver'|'cyan'}) {
+  return <span className={`hero-line ${tone}`} aria-hidden="true"><span className="hero-line-letters">{Array.from(text).map((character,index)=><span className={`cinematic-letter${character==='.'?' final-period':''}`} key={`${character}-${index}`}>{character===' '?'\u00a0':character}{character==='.'&&<i className="hero-period-ripple"/>}</span>)}</span><span className="hero-line-glint">{text}</span></span>
 }
 
-function FeaturedCard({slug}:{slug:string}){const item=componentRegistry.find(x=>x.slug===slug)!;const {favorites,toggleFavorite}=useUivex();const liked=favorites.includes(slug);return <motion.article className="home-feature-card" whileHover={{y:-4}} transition={{duration:.18}}><div className="home-card-preview"><CatalogPreview slug={slug} config={item.defaultConfig} compact/><button onClick={()=>toggleFavorite(slug)} aria-label={`${liked?'Remove':'Add'} ${item.title} ${liked?'from':'to'} favorites`} className={liked?'liked':''}><Heart fill={liked?'currentColor':'none'}/></button></div><div className="home-card-copy"><small>{item.category}</small><h3>{item.title}</h3><p>{item.description}</p></div><footer><Link to={`/components/${slug}`}>Preview</Link><Link to={`/playground/${slug}`}><Code2/> Code <ArrowRight/></Link></footer></motion.article>}
+function animateLettersNearPointer(event:React.PointerEvent<HTMLElement>) {
+  if(!event.currentTarget.classList.contains('is-ready')||event.pointerType==='touch'||matchMedia('(prefers-reduced-motion: reduce)').matches)return
+  event.currentTarget.querySelectorAll<HTMLElement>('.cinematic-letter').forEach((letter)=>{const box=letter.getBoundingClientRect();const dx=event.clientX-(box.left+box.width/2);const dy=event.clientY-(box.top+box.height/2);const distance=Math.hypot(dx,dy);const influence=Math.max(0,1-distance/175);gsap.to(letter,{x:dx*.045*influence,y:dy*.035*influence,z:28*influence,rotateX:-dy*.025*influence,rotateY:dx*.03*influence,duration:.38,ease:'power2.out',overwrite:'auto'})})
+}
+
+function resetHeroLetters(event:React.PointerEvent<HTMLElement>) {
+  gsap.to(event.currentTarget.querySelectorAll('.cinematic-letter'),{x:0,y:0,z:0,rotateX:0,rotateY:0,duration:.65,ease:'elastic.out(1,.55)',overwrite:'auto'})
+}
+
+function FeaturedCard({slug}:{slug:string}){const item=componentRegistry.find(x=>x.slug===slug)!;const {favorites,toggleFavorite}=useWorkspace();const liked=favorites.includes(slug);return <motion.article className="home-feature-card" whileHover={{y:-4}} transition={{duration:.18}}><div className="home-card-preview"><CatalogPreview slug={slug} config={item.defaultConfig} compact/><button onClick={()=>toggleFavorite(slug)} aria-label={`${liked?'Remove':'Add'} ${item.title} ${liked?'from':'to'} favorites`} className={liked?'liked':''}><Heart fill={liked?'currentColor':'none'}/></button></div><div className="home-card-copy"><small>{item.category}</small><h3>{item.title}</h3><p>{item.description}</p></div><footer><Link to={`/components/${slug}`}>Preview</Link><Link to={`/playground/${slug}`}><Code2/> Code <ArrowRight/></Link></footer></motion.article>}
 function CollectionTile({large=false,to,title,count,description,type}:{large?:boolean;to:string;title:string;count:string;description:string;type:string}){return <Link to={to} className={`collection-tile ${large?'large':''}`}><CollectionArtwork type={type}/><div><span>{count}</span><h3>{title}</h3><p>{description}</p></div><b><ArrowRight/></b></Link>}
 function CollectionArtwork({type}:{type:string}){
   if(type==='dashboard')return <div className="collection-art dashboard" aria-hidden="true"><div className="dash-shell"><aside><i/><i/><i/><i/><i/></aside><main><header><span>OVERVIEW</span><b/><b/></header><div className="dash-kpis"><article><small>REVENUE</small><strong>$84.2k</strong><em>+12%</em></article><article><small>SESSIONS</small><strong>12,840</strong><em>+8%</em></article><article><small>CONVERSION</small><strong>4.8%</strong><em>+1.2</em></article></div><section className="dash-data"><div className="dash-chart"><span>Performance</span><svg viewBox="0 0 180 62"><path d="M4 53L34 40L63 46L94 20L124 31L151 11L176 17"/><path className="dash-fill" d="M4 53L34 40L63 46L94 20L124 31L151 11L176 17V62H4Z"/></svg></div><div className="dash-activity"><span>Activity</span>{['Design review','Export ready','Tokens synced'].map((x,i)=><p key={x}><i/>{x}<small>{i+2}m</small></p>)}</div></section></main></div></div>

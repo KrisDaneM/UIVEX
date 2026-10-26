@@ -1,19 +1,19 @@
 import { componentRegistry, getComponent } from '../data/componentRegistry'
 
 export const SITE_NAME = 'UIVEX'
-export const DEFAULT_TITLE = 'UIVEX — Interactive React UI Components & Design Playground'
+export const DEFAULT_TITLE = 'UIVEX | Home'
 export const DEFAULT_DESCRIPTION = 'Discover interactive React UI components with creative animations, live previews, customizable designs, and reusable code. Explore and build with UIVEX.'
 
 export type SeoPage = { title: string; description: string; path: string; robots?: string; type?: 'website' | 'article'; jsonLd: Record<string, unknown> | Array<Record<string, unknown>> }
 
 const staticPages: Record<string, Omit<SeoPage, 'path' | 'jsonLd'>> = {
   '/': { title: DEFAULT_TITLE, description: DEFAULT_DESCRIPTION, type: 'website' },
-  '/explore': { title: 'Explore Interactive React Components | UIVEX', description: `Browse ${componentRegistry.length} interactive React and TypeScript components with live previews, accessibility notes, responsive states, and reusable source code.` },
-  '/playground': { title: 'React Component Playground & Customizer | UIVEX', description: 'Customize React component styles and states in a live responsive playground, then copy or download source code that reflects your settings.' },
-  '/guide': { title: 'UIVEX Guide — React Component Setup & Usage', description: 'Learn how to explore, customize, test, copy, and export UIVEX React components with responsive and accessibility-focused guidance.' },
-  '/about': { title: 'About UIVEX — Interactive Component Design Studio', description: 'Learn how UIVEX brings working React previews, local customization, accessibility notes, and faithful source export into one frontend studio.' },
-  '/changelog': { title: 'UIVEX Changelog — Product Updates & Releases', description: 'Read verified UIVEX release notes covering new interactive components, Playground improvements, accessibility work, and design system updates.' },
-  '/workspace': { title: 'Local Component Workspace | UIVEX', description: 'Manage favorite components and saved UIVEX presets stored privately in this browser.', robots: 'noindex, nofollow' },
+  '/explore': { title: 'UIVEX | Explore', description: `Browse ${componentRegistry.length} interactive React and TypeScript components with live previews, accessibility notes, responsive states, and reusable source code.` },
+  '/playground': { title: 'UIVEX | Playground', description: 'Customize React component styles and states in a live responsive playground, then copy or download source code that reflects your settings.' },
+  '/guide': { title: 'UIVEX | Guide', description: 'Learn how to explore, customize, test, copy, and export UIVEX React components with responsive and accessibility-focused guidance.' },
+  '/about': { title: 'UIVEX | About', description: 'Learn how UIVEX brings working React previews, local customization, accessibility notes, and faithful source export into one frontend studio.' },
+  '/changelog': { title: 'UIVEX | Changelog', description: 'Read verified UIVEX release notes covering new interactive components, Playground improvements, accessibility work, and design system updates.' },
+  '/workspace': { title: 'UIVEX | Workspace', description: 'Manage favorite components and saved UIVEX presets stored privately in this browser.', robots: 'noindex, nofollow' },
 }
 
 export function siteOrigin() {
@@ -29,7 +29,7 @@ export function seoForPath(pathname: string): SeoPage {
     const item = getComponent(decodeURIComponent(componentMatch[1]))
     if (item) {
       const description = `${item.description} Live preview, customization, and reusable React TypeScript source.`
-      return { title: `${item.title} React Component | UIVEX`, description, path, type: 'article', jsonLd: componentStructuredData(path, item.title, item.category, description) }
+      return { title: `UIVEX | ${item.title}`, description, path, type: 'article', jsonLd: componentStructuredData(path, item.title, item.category, description) }
     }
   }
   const playgroundMatch = path.match(/^\/playground\/([^/]+)$/)
@@ -37,13 +37,13 @@ export function seoForPath(pathname: string): SeoPage {
     const item = getComponent(decodeURIComponent(playgroundMatch[1]))
     if (item) {
       const description = `Customize ${item.title}, test its supported states and responsive behavior, then copy or download its generated React source.`
-      return { title: `Customize ${item.title} | UIVEX Playground`, description, path, robots: 'noindex, follow', jsonLd: pageStructuredData(path, `Customize ${item.title}`, description) }
+      return { title: 'UIVEX | Playground', description, path, robots: 'noindex, follow', jsonLd: pageStructuredData(path, `Customize ${item.title}`, description) }
     }
   }
   const page = staticPages[path]
   if (page) return { ...page, path, jsonLd: path === '/' ? homeStructuredData() : path === '/explore' ? exploreStructuredData() : pageStructuredData(path, page.title, page.description) }
   const description = 'The requested UIVEX page could not be found. Browse the component library to find interactive React patterns and reusable source.'
-  return { title: 'Page Not Found | UIVEX', description, path, robots: 'noindex, nofollow', jsonLd: pageStructuredData(path, 'Page Not Found', description) }
+  return { title: 'UIVEX | Page Not Found', description, path, robots: 'noindex, nofollow', jsonLd: pageStructuredData(path, 'Page Not Found', description) }
 }
 
 function pageStructuredData(path: string, name: string, description: string) {
