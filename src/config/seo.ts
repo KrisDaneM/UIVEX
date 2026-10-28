@@ -9,6 +9,7 @@ export type SeoPage = { title: string; description: string; path: string; robots
 const staticPages: Record<string, Omit<SeoPage, 'path' | 'jsonLd'>> = {
   '/': { title: DEFAULT_TITLE, description: DEFAULT_DESCRIPTION, type: 'website' },
   '/explore': { title: 'UIVEX | Explore', description: `Browse ${componentRegistry.length} interactive React and TypeScript components with live previews, accessibility notes, responsive states, and reusable source code.` },
+  '/icons': { title: 'UIVEX | Icons', description: 'Browse and customize open-source UI and brand icons, preview accessible motion presets, and export SVG or React JSX.' },
   '/playground': { title: 'UIVEX | Playground', description: 'Customize React component styles and states in a live responsive playground, then copy or download source code that reflects your settings.' },
   '/guide': { title: 'UIVEX | Guide', description: 'Learn how to explore, customize, test, copy, and export UIVEX React components with responsive and accessibility-focused guidance.' },
   '/about': { title: 'UIVEX | About', description: 'Learn how UIVEX brings working React previews, local customization, accessibility notes, and faithful source export into one frontend studio.' },
@@ -31,6 +32,10 @@ export function seoForPath(pathname: string): SeoPage {
       const description = `${item.description} Live preview, customization, and reusable React TypeScript source.`
       return { title: `UIVEX | ${item.title}`, description, path, type: 'article', jsonLd: componentStructuredData(path, item.title, item.category, description) }
     }
+  }
+  if(path==='/icons'||path.startsWith('/icons/')||path.startsWith('/playground/icons/')){
+    const description=staticPages['/icons'].description
+    return {title:'UIVEX | Icons',description,path,robots:path.startsWith('/playground/')?'noindex, follow':undefined,jsonLd:pageStructuredData(path,'UIVEX Icon Library',description)}
   }
   const playgroundMatch = path.match(/^\/playground\/([^/]+)$/)
   if (playgroundMatch) {

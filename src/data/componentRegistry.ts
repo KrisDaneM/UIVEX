@@ -3,6 +3,7 @@ import { studioExpansion } from './studioExpansion'
 import { batchOneExpansion } from './batchOneExpansion'
 import { batchTwoExpansion } from './batchTwoExpansion'
 import { batchThreeExpansion } from './batchThreeExpansion'
+import { batchFourExpansion } from './batchFourExpansion'
 
 const base: ComponentConfig = { label: 'Continue', accent: '#80e5e0', radius: 10, padding: 14, weight: 700, speed: 320, variant: 'solid', shadow: false, icon: true }
 const item = (value: Omit<CatalogItem, 'defaultConfig' | 'dependencies' | 'keyboard' | 'accessibility'> & { config?: Partial<ComponentConfig>; dependencies?: string[]; keyboard?: string; accessibility?: string }): CatalogItem => ({
@@ -56,6 +57,7 @@ export const componentRegistry: CatalogItem[] = [
   ...batchOneExpansion,
   ...batchTwoExpansion,
   ...batchThreeExpansion,
+  ...batchFourExpansion,
 ]
 
 export const categories = [...new Set(componentRegistry.map((item) => item.category))]

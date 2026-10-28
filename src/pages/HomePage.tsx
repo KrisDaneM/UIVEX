@@ -12,7 +12,7 @@ import '../styles/home-redesign.css'
 import '../styles/chrome-home.css'
 
 gsap.registerPlugin(ScrollTrigger)
-const featuredSlugs = ['command-button', 'clear-search', 'signal-toggle', 'rail-tabs', 'profile-brief']
+const featuredSlugs = ['command-button', 'clear-search', 'signal-toggle', 'rail-tabs']
 
 export default function HomePage() {
   const page = useRef<HTMLDivElement>(null)
@@ -52,10 +52,10 @@ export default function HomePage() {
   }, [])
   const search = (value: FormDataEntryValue | string | null) => { const query = String(value ?? '').trim(); navigate(query ? `/explore?q=${encodeURIComponent(query)}` : '/explore') }
   return <div className="reference-home" ref={page}>
-    <LiquidChromeScene className="home-chrome-wave"/>
     <div className="home-atmosphere" aria-hidden="true"><i/><i/><i/></div>
-    <section className="reference-hero cinematic-hero container" onPointerMove={animateLettersNearPointer} onPointerLeave={resetHeroLetters}>
-      <div className="cinematic-hero-inner">
+    <section className="reference-hero cinematic-hero" onPointerMove={animateLettersNearPointer} onPointerLeave={resetHeroLetters}>
+      <LiquidChromeScene className="home-chrome-wave"/>
+      <div className="cinematic-hero-inner container">
         <h1 className="cinematic-title" aria-label="Build modern interfaces, faster."><HeroLine text="Build modern" tone="silver"/><HeroLine text="interfaces," tone="silver"/><HeroLine text="faster." tone="cyan"/></h1>
         <div className="reference-hero-actions cinematic-hero-actions"><Link className="ref-button primary cinematic-primary" to="/explore">Explore components</Link><Link className="ref-button secondary" to="/playground"><Play/> Try Playground</Link></div>
       </div>

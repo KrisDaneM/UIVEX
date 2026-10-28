@@ -28,7 +28,8 @@ describe('application theme',()=>{
   it('uses the accessible light accent inside inherited component previews',()=>{
     localStorage.setItem('uivex:v1:theme',JSON.stringify('light'))
     const {container}=render(<UivexProvider><CatalogPreview slug="magnetic-button" config={previewConfig}/></UivexProvider>)
-    expect(container.querySelector<HTMLElement>('.x-magnetic')?.style.getPropertyValue('--x-accent')).toBe('#008C95')
+    expect(document.documentElement).toHaveClass('light')
+    expect(container.querySelector<HTMLElement>('.x-magnetic')?.style.getPropertyValue('--x-accent')).toBe('var(--component-accent)')
   })
 
   it('preserves intentional custom preview accents in light mode',()=>{

@@ -19,7 +19,7 @@ describe('batch three interactive previews',()=>{
     expect(screen.getAllByLabelText('Field')).toHaveLength(3)
     fireEvent.click(screen.getByRole('button',{name:/add rule/i}))
     expect(screen.getAllByLabelText('Field')).toHaveLength(4)
-    fireEvent.click(screen.getAllByRole('button',{name:'×'})[0])
+    fireEvent.click(screen.getAllByRole('button',{name:/remove rule/i})[0])
     expect(screen.getAllByLabelText('Field')).toHaveLength(3)
   })
 

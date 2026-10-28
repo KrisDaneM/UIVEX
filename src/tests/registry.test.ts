@@ -30,12 +30,21 @@ describe('component registry', () => {
 
   it('includes 40 distinct components in expansion batch three', () => {
     const batch = componentRegistry.filter((item) => item.added === '2026-10-26')
-    expect(componentRegistry).toHaveLength(187)
     expect(batch).toHaveLength(40)
     expect(new Set(batch.map((item) => item.slug)).size).toBe(40)
     expect(new Set(batch.map((item) => item.title)).size).toBe(40)
     expect(getComponent('visual-query-builder')).toBeDefined()
     expect(getComponent('animation-timeline-scrubber')).toBeDefined()
+  })
+
+  it('includes 25 distinct motion components in expansion batch four', () => {
+    const batch = componentRegistry.filter((item) => item.added === '2026-10-27')
+    expect(componentRegistry).toHaveLength(212)
+    expect(batch).toHaveLength(25)
+    expect(new Set(batch.map((item) => item.slug)).size).toBe(25)
+    expect(new Set(batch.map((item) => item.title)).size).toBe(25)
+    expect(getComponent('letter-depth-assembly')).toBeDefined()
+    expect(getComponent('weight-sequence-type')).toBeDefined()
   })
 
 })

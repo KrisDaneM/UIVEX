@@ -6,9 +6,11 @@ import { StudioPreview, studioFit, studioSlugs } from './StudioPreview'
 import { BatchOnePreview, batchOneSlugs } from './BatchOnePreview'
 import { BatchTwoPreview, batchTwoFit, batchTwoSlugs } from './BatchTwoPreview'
 import { BatchThreePreview, batchThreeFit, batchThreeSlugs } from './BatchThreePreview'
+import { BatchFourPreview, batchFourFit, batchFourSlugs } from './BatchFourPreview'
 import '../../styles/batch-one-catalog.css'
 import '../../styles/batch-two-catalog.css'
 import '../../styles/batch-three-catalog.css'
+import '../../styles/batch-four-catalog.css'
 
 interface Props { slug: string; config: ComponentConfig; state?: PreviewState; compact?: boolean }
 
@@ -24,13 +26,14 @@ export function CatalogPreview({ slug, config, state = 'default', compact = fals
   const themedConfig = accent === config.accent ? config : {...config, accent}
   const common = { '--demo-accent': accent, '--demo-accent-foreground': accentInk, '--demo-radius': `${config.radius}px`, '--demo-pad': `${Math.max(8, config.padding)}px`, '--demo-speed': `${config.speed}ms` } as React.CSSProperties
   const buttonStyle = { background: config.variant === 'outline' || config.variant === 'quiet' ? 'transparent' : accent, color: config.variant === 'solid' ? accentInk : accent, borderColor: accent, borderRadius: config.radius, padding: `${Math.max(9, config.padding - 3)}px ${config.padding + 6}px`, fontWeight: config.weight, boxShadow: config.shadow ? `0 10px 28px ${accent}35` : 'none' }
-  const fit = batchThreeSlugs.has(slug) ? batchThreeFit(slug) : batchTwoSlugs.has(slug) ? batchTwoFit(slug) : studioSlugs.has(slug) ? studioFit(slug) : previewFitFor(slug)
+  const fit = batchFourSlugs.has(slug) ? batchFourFit(slug) : batchThreeSlugs.has(slug) ? batchThreeFit(slug) : batchTwoSlugs.has(slug) ? batchTwoFit(slug) : studioSlugs.has(slug) ? studioFit(slug) : previewFitFor(slug)
   const wrap = (child: React.ReactNode) => <div className={`demo demo-${state} demo-fit-${fit} ${compact ? 'demo-compact' : ''}`} data-preview-fit={fit} style={common}>{child}</div>
 
   if (studioSlugs.has(slug)) return wrap(<StudioPreview slug={slug} config={themedConfig} state={state}/>)
   if (batchOneSlugs.has(slug)) return wrap(<BatchOnePreview slug={slug} config={themedConfig} state={state}/>)
   if (batchTwoSlugs.has(slug)) return wrap(<BatchTwoPreview slug={slug} config={themedConfig} state={state}/>)
   if (batchThreeSlugs.has(slug)) return wrap(<BatchThreePreview slug={slug} config={themedConfig} state={state}/>)
+  if (batchFourSlugs.has(slug)) return wrap(<BatchFourPreview slug={slug} config={themedConfig} state={state}/>)
   if (extendedSlugs.has(slug)) return wrap(<ExtendedPreview slug={slug} config={themedConfig} state={state}/>)
 
   if (slug === 'command-button') return wrap(<button className="demo-button" style={buttonStyle} disabled={disabled || state === 'loading'}>{state === 'loading' ? <span className="mini-spinner" /> : config.icon && <ArrowRight size={17}/>}<span>{state === 'loading' ? 'Working…' : config.label}</span></button>)

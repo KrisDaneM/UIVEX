@@ -4,23 +4,33 @@ Last verified batch: 2026-10-26 · Batch 03
 
 ## Status
 
-- Verified registry target after Batch 03: **187 components**
-- Remaining to 500: **313 components**
+- Verified registry target after Batch 04: **212 components**
+- Remaining to 500: **288 components**
 - Duplicate slugs at audit: **0**
 - Duplicate titles at audit: **0**
-- New dependencies: **none**
+- New dependencies: **simple-icons** for curated CC0 brand SVG data.
 - WebGL/Three.js components: **not introduced yet**; schedule them only after isolated lazy-canvas infrastructure is ready.
+- Separate icon catalog: **234 assets** (175 Lucide UI symbols + 59 Simple Icons brand marks); excluded from the 500-component count.
+
+## Batch 04 — 25 motion typography components
+
+- Effects: `letter-depth-assembly`, `liquid-phrase-morph`, `chrome-reflection-type`, `elastic-word-reveal`, `perspective-word-flip`, `magnetic-letter-field`, `kinetic-type-grid`, `wave-baseline-type`, `spotlight-glyph-reveal`, `rotating-word-cylinder`, `editorial-line-reveal`, `text-path-journey`, `depth-parallax-headline`, `typography-keyframe-timeline`, `outline-fill-type`, `distortion-lens-type`, `animated-gradient-type`, `ribbon-slice-type`, `hover-echo-type`, `orbital-caption-type`, `weight-sequence-type`
+- Buttons: `directional-label-reveal`
+- Navigation: `elastic-underline-nav`
+- Loaders: `particle-type-formation`
+- Cards: `motion-typography-card`
+- Shared previews now use container-relative typography and zero-minimum layout tracks; CSS Clamp Generator no longer uses browser viewport units inside gallery cards.
 
 | Category | Baseline | Batch 01 | Batch 02 | Current | Minimum 30 remaining |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| Buttons | 11 | 2 | 3 | 16 | 14 |
+| Buttons | 11 | 2 | 3 | 17 | 13 |
 | Forms | 14 | 2 | 3 | 24 | 6 |
-| Cards | 12 | 2 | 2 | 21 | 9 |
-| Navigation | 10 | 2 | 2 | 18 | 12 |
+| Cards | 12 | 2 | 2 | 22 | 8 |
+| Navigation | 10 | 2 | 2 | 19 | 11 |
 | Feedback | 11 | 2 | 2 | 16 | 14 |
-| Loaders | 8 | 2 | 3 | 13 | 17 |
+| Loaders | 8 | 2 | 3 | 14 | 16 |
 | Overlays | 5 | 2 | 3 | 10 | 20 |
-| Effects | 6 | 2 | 3 | 19 | 11 |
+| Effects | 6 | 2 | 3 | 40 | 0 |
 | Data | 10 | 2 | 2 | 20 | 10 |
 | Media | 8 | 2 | 1 | 16 | 14 |
 | Layouts | 5 | 2 | 1 | 14 | 16 |
@@ -79,6 +89,12 @@ Last verified batch: 2026-10-26 · Batch 03
 
 ## Verification checklist
 
+- Batch 04 registry audit: 212 total components; 25 Batch 04 entries; zero duplicate slugs or titles.
+- Batch 04 preview/export coverage: all registered previews render and every Batch 04 source export preserves its interaction family (pointer, scrubber, selection, cycling, toggle, or replay).
+- Batch 04 targeted regressions: semantic Light Mode accent inheritance, CSS Clamp container-relative sizing, query-rule addition/removal, and client-side Playground navigation.
+- Batch 04 Vitest: 7 files and 40 tests passed using four workers outside the restricted native Tailwind sandbox.
+- Batch 04 TypeScript: passed (`tsc -b --pretty false`).
+- Batch 04 ESLint: 0 errors; 3 existing Fast Refresh warnings in the colocated Batch Three preview helpers.
 - Batch 03 registry audit: 187 total components; 40 Batch 03 entries; SEO generator confirmed unique public slugs while emitting 193 sitemap URLs.
 - Batch 03 TypeScript: passed through the production build.
 - Batch 03 ESLint: passed with three non-blocking Fast Refresh warnings caused by colocated preview routing/code-export helpers.
@@ -102,6 +118,6 @@ Last verified batch: 2026-10-26 · Batch 03
 
 ## Known limitations / next work
 
-- Batch 03 should prioritize Layouts, Overlays, Effects, Media, and Loaders because they have the largest deficits to 30.
+- Future batches should prioritize Overlays, Loaders, Layouts, Buttons, Media, Feedback, and Navigation because they remain below 30 components.
 - Heavy 3D previews still require a lazy, single-canvas lifecycle wrapper with visibility pausing, DPR limiting, cleanup, and an accessible static fallback.
 - Do not create an `Advanced` category until there is a plan to supply its full category target; sophisticated patterns should remain in the closest existing category meanwhile.

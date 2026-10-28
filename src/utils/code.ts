@@ -4,8 +4,11 @@ import { studioCode } from '../components/catalog/StudioPreview'
 import { batchOneCode } from '../components/catalog/BatchOnePreview'
 import { batchTwoCode } from '../components/catalog/BatchTwoPreview'
 import { batchThreeCode } from '../components/catalog/BatchThreePreview'
+import { batchFourCode } from '../components/catalog/BatchFourPreview'
 
 export function generateCode(item:CatalogItem, c:ComponentConfig, state:PreviewState='default'){
+  const batchFour = batchFourCode(item.slug,c)
+  if(batchFour) return batchFour
   const batchThree = batchThreeCode(item.slug,c)
   if(batchThree) return batchThree
   const batchTwo = batchTwoCode(item.slug,c)
