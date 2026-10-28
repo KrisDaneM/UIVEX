@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { ArrowRight, Braces, Check, Code2, Heart, Play, Search, SlidersHorizontal } from 'lucide-react'
+import { ArrowRight, Braces, Check, Code2, Heart, Search, SlidersHorizontal } from 'lucide-react'
 import { Link, useNavigate } from 'react-router-dom'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -22,20 +22,21 @@ export default function HomePage() {
     const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches
     const context = gsap.context(() => {
       if (!reduced) {
-        const silver = gsap.utils.toArray<HTMLElement>('.hero-line.silver .cinematic-letter')
-        const cyan = gsap.utils.toArray<HTMLElement>('.hero-line.cyan .cinematic-letter')
+        const letters = gsap.utils.toArray<HTMLElement>('.hero-wordmark .cinematic-letter')
+        const cyanLetter = page.current?.querySelector<HTMLElement>('.hero-wordmark .letter-x')
+        const tagline = gsap.utils.toArray<HTMLElement>('.hero-tagline-word')
+        const welcome = page.current?.querySelector<HTMLElement>('.hero-welcome')
         const hero = page.current?.querySelector<HTMLElement>('.cinematic-hero')
-        gsap.set([...silver, ...cyan], { transformOrigin: '50% 72%', transformPerspective: 900 })
+        gsap.set(letters, { transformOrigin: '50% 72%', transformPerspective: 1100 })
         gsap.timeline({ defaults: { ease: 'power3.out' }, onComplete: () => hero?.classList.add('is-ready') })
-          .fromTo(silver, { yPercent: 112, z: -170, rotateX: -68, rotateY: (index) => index % 2 ? 16 : -16, opacity: 0 }, { yPercent: 0, z: 0, rotateX: 0, rotateY: 0, opacity: 1, duration: 1.05, stagger: .025 }, .08)
-          .fromTo('.hero-line.silver .hero-line-glint', { xPercent: -42, opacity: 0 }, { xPercent: 42, opacity: 1, duration: .7, stagger: .1, ease: 'power2.inOut' }, .92)
-          .to('.hero-line.silver .hero-line-glint', { opacity: 0, duration: .28 }, 1.46)
-          .fromTo(cyan, { yPercent: 130, z: -220, rotateX: -72, scale: .88, opacity: 0 }, { yPercent: 0, z: 0, rotateX: 0, scale: 1, opacity: 1, duration: .92, stagger: .055, ease: 'back.out(1.35)' }, 1.12)
-          .fromTo('.hero-line.cyan .hero-line-glint', { xPercent: -45, opacity: 0 }, { xPercent: 42, opacity: 1, duration: .72, ease: 'power2.inOut' }, 1.62)
-          .to('.hero-line.cyan .hero-line-glint', { opacity: 0, duration: .3 }, 2.16)
-          .fromTo('.hero-period-ripple', { scale: .1, opacity: .8 }, { scale: 3.8, opacity: 0, duration: .7, ease: 'power2.out' }, 1.95)
-          .fromTo('.cinematic-hero-actions a', { y: 18, opacity: 0, scale: .96 }, { y: 0, opacity: 1, scale: 1, duration: .5, stagger: .1 }, 1.92)
-          .set([...silver, ...cyan], { clearProps: 'transform,opacity' }, 2.65)
+          .fromTo(welcome!, { y: 12, opacity: 0 }, { y: 0, opacity: 1, duration: .55, ease: 'power2.out' }, .04)
+          .fromTo(letters, { yPercent: 68, z: (index) => -180 + index * 25, rotateX: -48, rotateY: (index) => index % 2 ? 11 : -11, rotateZ: (index) => index % 2 ? 1.2 : -1.2, opacity: 0 }, { yPercent: 0, z: 0, rotateX: 0, rotateY: 0, rotateZ: 0, opacity: 1, duration: 1.08, stagger: .075 }, .16)
+          .fromTo('.hero-wordmark-glint', { backgroundPosition: '180% 50%', opacity: 0 }, { backgroundPosition: '-80% 50%', opacity: 1, duration: .82, ease: 'power2.inOut' }, .88)
+          .to('.hero-wordmark-glint', { opacity: 0, duration: .28 }, 1.55)
+          .fromTo(cyanLetter!, { backgroundPosition: '0% 50%', scale: .92 }, { backgroundPosition: '100% 50%', scale: 1.025, duration: .72, ease: 'back.out(1.3)' }, 1.02)
+          .fromTo(tagline, { y: 18, z: -55, rotateX: -24, opacity: 0 }, { y: 0, z: 0, rotateX: 0, opacity: 1, duration: .58, stagger: .075, ease: 'power2.out' }, 1.42)
+          .fromTo('.hero-tagline-word.faster', { backgroundPosition: '0% 50%' }, { backgroundPosition: '100% 50%', duration: .72, ease: 'power2.inOut' }, 1.72)
+          .set([...letters, ...tagline], { clearProps: 'transform,opacity' }, 2.35)
 
         gsap.utils.toArray<HTMLElement>('[data-scroll-reveal]').forEach((element) => gsap.from(element, { scrollTrigger: { trigger: element, start: 'top 88%', once: true }, y: 24, opacity: 0, duration: .65, ease: 'power2.out' }))
         gsap.from('.home-feature-card', { scrollTrigger: { trigger: '.home-feature-grid', start: 'top 86%', once: true }, y: 24, opacity: 0, stagger: .08, duration: .55, ease: 'power2.out' })
@@ -56,8 +57,9 @@ export default function HomePage() {
     <section className="reference-hero cinematic-hero" onPointerMove={animateLettersNearPointer} onPointerLeave={resetHeroLetters}>
       <LiquidChromeScene className="home-chrome-wave"/>
       <div className="cinematic-hero-inner container">
-        <h1 className="cinematic-title" aria-label="Build modern interfaces, faster."><HeroLine text="Build modern" tone="silver"/><HeroLine text="interfaces," tone="silver"/><HeroLine text="faster." tone="cyan"/></h1>
-        <div className="reference-hero-actions cinematic-hero-actions"><Link className="ref-button primary cinematic-primary" to="/explore">Explore components</Link><Link className="ref-button secondary" to="/playground"><Play/> Try Playground</Link></div>
+        <p className="hero-welcome">Welcome To</p>
+        <h1 className="cinematic-title hero-wordmark" aria-label="UIVEX"><span className="hero-wordmark-letters" aria-hidden="true">{Array.from('UIVEX').map(character=><span className={`cinematic-letter${character==='X'?' letter-x':''}`} data-letter={character} key={character}>{character}</span>)}</span><span className="hero-wordmark-glint" aria-hidden="true">UIVEX</span></h1>
+        <p className="hero-tagline" aria-label="Build modern interfaces faster.">{['BUILD','MODERN','INTERFACES','FASTER.'].map(word=><span className={`hero-tagline-word${word==='FASTER.'?' faster':''}`} key={word}>{word}</span>)}</p>
       </div>
     </section>
     <section className="reference-search container" data-scroll-reveal>
@@ -75,17 +77,13 @@ export default function HomePage() {
   </div>
 }
 
-function HeroLine({text,tone}:{text:string;tone:'silver'|'cyan'}) {
-  return <span className={`hero-line ${tone}`} aria-hidden="true"><span className="hero-line-letters">{Array.from(text).map((character,index)=><span className={`cinematic-letter${character==='.'?' final-period':''}`} key={`${character}-${index}`}>{character===' '?'\u00a0':character}{character==='.'&&<i className="hero-period-ripple"/>}</span>)}</span><span className="hero-line-glint">{text}</span></span>
-}
-
 function animateLettersNearPointer(event:React.PointerEvent<HTMLElement>) {
   if(!event.currentTarget.classList.contains('is-ready')||event.pointerType==='touch'||matchMedia('(prefers-reduced-motion: reduce)').matches)return
-  event.currentTarget.querySelectorAll<HTMLElement>('.cinematic-letter').forEach((letter)=>{const box=letter.getBoundingClientRect();const dx=event.clientX-(box.left+box.width/2);const dy=event.clientY-(box.top+box.height/2);const distance=Math.hypot(dx,dy);const influence=Math.max(0,1-distance/175);gsap.to(letter,{x:dx*.045*influence,y:dy*.035*influence,z:28*influence,rotateX:-dy*.025*influence,rotateY:dx*.03*influence,duration:.38,ease:'power2.out',overwrite:'auto'})})
+  event.currentTarget.querySelectorAll<HTMLElement>('.cinematic-letter').forEach((letter)=>{const box=letter.getBoundingClientRect();const dx=event.clientX-(box.left+box.width/2);const dy=event.clientY-(box.top+box.height/2);const distance=Math.hypot(dx,dy);const influence=Math.max(0,1-distance/175);const reflection=52+Math.max(-28,Math.min(28,dx*.08));gsap.to(letter,{x:dx*.04*influence,y:dy*.03*influence,z:26*influence,rotateX:-dy*.022*influence,rotateY:dx*.026*influence,backgroundPosition:`${reflection}% 50%`,duration:.38,ease:'power2.out',overwrite:'auto'})})
 }
 
 function resetHeroLetters(event:React.PointerEvent<HTMLElement>) {
-  gsap.to(event.currentTarget.querySelectorAll('.cinematic-letter'),{x:0,y:0,z:0,rotateX:0,rotateY:0,duration:.65,ease:'elastic.out(1,.55)',overwrite:'auto'})
+  gsap.to(event.currentTarget.querySelectorAll('.cinematic-letter'),{x:0,y:0,z:0,rotateX:0,rotateY:0,backgroundPosition:'52% 50%',duration:.65,ease:'elastic.out(1,.55)',overwrite:'auto'})
 }
 
 function FeaturedCard({slug}:{slug:string}){const item=componentRegistry.find(x=>x.slug===slug)!;const {favorites,toggleFavorite}=useWorkspace();const liked=favorites.includes(slug);return <motion.article className="home-feature-card" whileHover={{y:-4}} transition={{duration:.18}}><div className="home-card-preview"><CatalogPreview slug={slug} config={item.defaultConfig} compact/><button onClick={()=>toggleFavorite(slug)} aria-label={`${liked?'Remove':'Add'} ${item.title} ${liked?'from':'to'} favorites`} className={liked?'liked':''}><Heart fill={liked?'currentColor':'none'}/></button></div><div className="home-card-copy"><small>{item.category}</small><h3>{item.title}</h3><p>{item.description}</p></div><footer><Link to={`/components/${slug}`}>Preview</Link><Link to={`/playground/${slug}`}><Code2/> Code <ArrowRight/></Link></footer></motion.article>}

@@ -17,22 +17,21 @@ const WorkspaceCtx = createContext<WorkspaceContextValue | null>(null)
 const keys = { theme:'uivex:v1:theme', favorites:'uivex:v1:favorites', presets:'uivex:v1:presets', recent:'uivex:v1:recent' }
 
 function safeRead<T>(key:string, fallback:T):T { try { const value=localStorage.getItem(key); return value ? JSON.parse(value) as T : fallback } catch { return fallback } }
-function initialTheme():Theme { const saved=safeRead<Theme|null>(keys.theme,null);if(saved==='dark'||saved==='light')return saved;return window.matchMedia?.('(prefers-color-scheme: light)').matches?'light':'dark' }
 function canStore(){ try { localStorage.setItem('uivex:test','1'); localStorage.removeItem('uivex:test'); return true } catch { return false } }
-function applyTheme(theme:Theme){const root=document.documentElement;root.classList.toggle('light',theme==='light');root.dataset.theme=theme;document.querySelector('meta[name="theme-color"]')?.setAttribute('content',theme==='light'?'#F3F7F8':'#101820')}
+function applyDarkTheme(){const root=document.documentElement;root.classList.remove('light');root.dataset.theme='dark';document.querySelector('meta[name="theme-color"]')?.setAttribute('content','#101820')}
 
 export function UivexProvider({children}:{children:React.ReactNode}){
   const [storageAvailable] = useState(canStore)
-  const [theme,setThemeState] = useState<Theme>(initialTheme)
+  const theme:Theme = 'dark'
   const [favorites,setFavorites] = useState<string[]>(()=>safeRead<string[]>(keys.favorites,[]).filter(x=>validSlugs.has(x)))
   const [presets,setPresets] = useState<SavedPreset[]>(()=>safeRead<SavedPreset[]>(keys.presets,[]).filter(x=>validSlugs.has(x.slug)).slice(0,100))
   const [recent,setRecent] = useState<string[]>(()=>safeRead<string[]>(keys.recent,[]).filter(x=>validSlugs.has(x)).slice(0,12))
   const [notice,setNotice] = useState('')
   const announce=useCallback((message:string)=>{setNotice('');setTimeout(()=>setNotice(message),10)},[])
-  useLayoutEffect(()=>applyTheme(theme),[theme])
-  useEffect(()=>{try{localStorage.setItem(keys.theme,JSON.stringify(theme))}catch{/* session fallback */}},[theme])
+  useLayoutEffect(()=>applyDarkTheme(),[])
+  useEffect(()=>{try{localStorage.setItem(keys.theme,JSON.stringify('dark'))}catch{/* session fallback */}},[])
   useEffect(()=>{try{localStorage.setItem(keys.favorites,JSON.stringify(favorites));localStorage.setItem(keys.presets,JSON.stringify(presets));localStorage.setItem(keys.recent,JSON.stringify(recent))}catch{/* session fallback */}},[favorites,presets,recent])
-  const setTheme=useCallback((value:Theme)=>{applyTheme(value);setThemeState(value)},[])
+  const setTheme=useCallback((_value:Theme)=>applyDarkTheme(),[])
   const toggleFavorite=useCallback((slug:string)=>{if(!validSlugs.has(slug))return;setFavorites(current=>{const removing=current.includes(slug);announce(removing?'Removed from favorites':'Added to favorites');return removing?current.filter(value=>value!==slug):[...current,slug]})},[announce])
   const addRecent=useCallback((slug:string)=>{if(validSlugs.has(slug))setRecent(x=>[slug,...x.filter(v=>v!==slug)].slice(0,12))},[])
   const savePreset=useCallback((slug:string,config:ComponentConfig,name?:string)=>{if(!validSlugs.has(slug))return;setPresets(current=>{const preset={id:crypto.randomUUID?.()??`${Date.now()}`,name:name?.trim()||`Preset ${current.length+1}`,slug,config,createdAt:new Date().toISOString()};return[preset,...current].slice(0,100)});announce('Preset saved locally')},[announce])

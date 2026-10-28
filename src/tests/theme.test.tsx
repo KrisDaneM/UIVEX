@@ -1,5 +1,4 @@
 import { cleanup, render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
 import { afterEach, describe, expect, it } from 'vitest'
 import { UivexProvider, useUivex } from '../app/UivexContext'
 import { CatalogPreview } from '../components/catalog/CatalogPreview'
@@ -15,25 +14,21 @@ function ThemeProbe(){
 describe('application theme',()=>{
   afterEach(()=>{cleanup();localStorage.clear();document.documentElement.classList.remove('light');delete document.documentElement.dataset.theme})
 
-  it('restores and persists the selected theme',async()=>{
+  it('ignores a previously saved light preference and enforces dark mode',()=>{
     localStorage.setItem('uivex:v1:theme',JSON.stringify('light'))
     render(<UivexProvider><ThemeProbe/></UivexProvider>)
-    expect(screen.getByRole('button')).toHaveTextContent('light')
-    expect(document.documentElement).toHaveClass('light')
-    await userEvent.click(screen.getByRole('button'))
+    expect(screen.getByRole('button')).toHaveTextContent('dark')
     expect(document.documentElement).not.toHaveClass('light')
     expect(JSON.parse(localStorage.getItem('uivex:v1:theme')!)).toBe('dark')
   })
 
-  it('uses the accessible light accent inside inherited component previews',()=>{
-    localStorage.setItem('uivex:v1:theme',JSON.stringify('light'))
+  it('uses the inherited component accent in permanent dark mode',()=>{
     const {container}=render(<UivexProvider><CatalogPreview slug="magnetic-button" config={previewConfig}/></UivexProvider>)
-    expect(document.documentElement).toHaveClass('light')
+    expect(document.documentElement).not.toHaveClass('light')
     expect(container.querySelector<HTMLElement>('.x-magnetic')?.style.getPropertyValue('--x-accent')).toBe('var(--component-accent)')
   })
 
-  it('preserves intentional custom preview accents in light mode',()=>{
-    localStorage.setItem('uivex:v1:theme',JSON.stringify('light'))
+  it('preserves intentional custom preview accents',()=>{
     const {container}=render(<UivexProvider><CatalogPreview slug="magnetic-button" config={{...previewConfig,accent:'#B42318'}}/></UivexProvider>)
     expect(container.querySelector<HTMLElement>('.x-magnetic')?.style.getPropertyValue('--x-accent')).toBe('#B42318')
   })
